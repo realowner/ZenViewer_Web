@@ -1,0 +1,103 @@
+html, body {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+h1{
+    margin: 0;
+}
+
+.flash{
+    color: red;
+    position: absolute;
+    /* margin-top: 25px; */
+    margin-left: 450px;
+}
+
+.content{
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.left-bar {
+    min-width: 400px;
+    height: 100%;
+    border: 1px solid red;
+}
+
+.left-bar-content{
+    border: 1px solid red;
+}
+
+.right-bar{
+    width: 100%;
+    height: auto;
+    border: 1px solid red;
+    margin: 50px;
+}
+
+.tab-container{
+    border: 1px solid red;
+}
+
+.tab-container-item{
+    margin-bottom: 30px;
+}
+
+.queue_form{
+    display: flex;
+    justify-content: space-between;
+    /* border: 1px solid red; */
+}
+
+.queue-table{
+    width: 100%;
+    border-collapse: collapse;
+	text-align: center;
+	/* border: 1px solid black; */
+}
+
+.queue-table td{
+	border: 1px solid black;
+}
+
+
+
+/**************************** TABS ****************************/
+.tab {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.tablinks{
+    margin: 0;
+    padding: 30px;
+    flex: 1 0 30%;
+    text-align: center;
+    border: 1px solid red;
+}
+
+.tablinks:hover{
+    cursor: pointer;
+}
+
+.tabcontent{
+    display: none;
+    margin: 0;
+    padding: 15px;
+}
+
+.active {
+    display: block;
+}
+
+.tab-active {
+    border: none;
+}
+
+.tab-active:hover{
+    cursor: default;
+}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WebZenViewer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="main-container">
+    <section class="content">
+
+        <section class="left-bar">
+            <div class="left-bar-content">
+                <h1>WebZenViewer 1.0</h1>
+                <a href="{{ url_for('index') }}">Reload</a>
+            </div>
+            
+        </section>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <section class="flash">
+                        {% for message in messages %}
+                        <p>{{ message }}</p>
+                        {% endfor %}
+                </section>
+            {% endif %}
+        {% endwith %}
+
+        {% block rightbar %}{% endblock %}
+
+    </section>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
