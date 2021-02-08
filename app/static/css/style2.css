@@ -12,8 +12,8 @@ h1, p{
 .flash{
     color: red;
     position: absolute;
-    /* margin-top: 25px; */
-    margin-left: 450px;
+    margin-left: 400px;
+    margin-top: 10px;
 }
 
 .content{
@@ -60,7 +60,6 @@ h1, p{
     margin-bottom: 30px;
 }
 
-/************************ Queue style ******************************/
 .queue_form{
     display: flex;
     justify-content: space-between;
@@ -78,7 +77,12 @@ h1, p{
 	border: 1px solid black;
 }
 
-.views_num_form{
+.views-num-form{
+    display: flex;
+    justify-content: space-between;
+}
+
+.right-bar-content-links{
     display: flex;
     justify-content: space-between;
 }

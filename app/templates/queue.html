@@ -11,7 +11,7 @@
             {{ queue_form.hidden_tag() }}
             <div>
                 {{ queue_form.url_for_queue.label }}
-                {{ queue_form.url_for_queue(size=60) }}
+                {{ queue_form.url_for_queue(size=50) }}
                 {% for error in queue_form.url_for_queue.errors %}
                     <span style="color: red; font-size: 10pt;">{{ error }}</span>
                 {% endfor %}

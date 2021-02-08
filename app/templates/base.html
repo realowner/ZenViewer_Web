@@ -8,6 +8,16 @@
 <body class="main-container">
     <section class="content">
 
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <section class="flash">
+                        {% for message in messages %}
+                        <p>{{ message }}</p>
+                        {% endfor %}
+                </section>
+            {% endif %}
+        {% endwith %}
+
         <section class="left-bar">
 
             <section class="left-bar-content">
@@ -29,16 +39,6 @@
             </section>
             
         </section>
-
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <section class="flash">
-                        {% for message in messages %}
-                        <p>{{ message }}</p>
-                        {% endfor %}
-                </section>
-            {% endif %}
-        {% endwith %}
 
         <section class="right-bar">
             <section class="right-bar-content">

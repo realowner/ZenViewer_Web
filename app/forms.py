@@ -1,6 +1,5 @@
 from flask_wtf import FlaskForm
-from flask_wtf.recaptcha import validators
-from wtforms import StringField, IntegerField, TextField, SubmitField
+from wtforms import IntegerField, TextField, SubmitField
 from wtforms.validators import DataRequired, ValidationError
 from app.models import LinkQueue
 
@@ -17,6 +16,6 @@ class LinkQueueForm(FlaskForm):
 
 
 class NumberOfViewes(FlaskForm):
-    url_for_viewer = TextField('Url:', validators=[DataRequired()])
+    # url_for_viewer = TextField('Url:', validators=[DataRequired()])
     num = IntegerField('Views:', validators=[DataRequired()])
     submit_view = SubmitField('Start')
