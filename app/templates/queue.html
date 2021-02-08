@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block rightbar %}
+
+    <div class="right-bar-content-head">
+        <h1>QUEUE<h1>
+    </div>
+
+    <div class="right-bar-content-form">
+        <form method="post" class="queue_form">
+            {{ queue_form.hidden_tag() }}
+            <div>
+                {{ queue_form.url_for_queue.label }}
+                {{ queue_form.url_for_queue(size=60) }}
+                {% for error in queue_form.url_for_queue.errors %}
+                    <span style="color: red; font-size: 10pt;">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div>
+                {{ queue_form.views.label }}
+                {{ queue_form.views(size=4) }}
+            </div>
+            {{ queue_form.submit_link }}
+        </form>
+    </div>
+
+    <div class="right-bar-content-table">
+        <table class="queue-table">
+            {% for link in queue_links %}
+                <tr>
+                    <td>{{ link.id }}</td>
+                    <td style="width: 80%;"><a href="{{ link.url }}">{{ link.url }}</a></td>
+                    <td>{{ link.views }}</td>
+                    <td><a href="/queue/{{ link.id }}/delete">Delete</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block rightbar %}
+
+    <div class="right-bar-content-head">
+        <h1>VIEWS<h1>
+    </div>
+
+    <div class="right-bar-content-form">
+        {% for link in queue_links %}
+            <hr>
+            <form method="post" class="views_num_form" action="views/{{link.id}}/start">
+                {{ views_num_form.hidden_tag() }}
+                <div style="display: flex;">
+                    <p>{{ link.id }}. </p>
+                    {{ views_num_form.url_for_viewer(size=80, value=link.url, disabled=True) }}
+                </div>
+                <div>
+                    {{ views_num_form.num.label }}
+                    {{ views_num_form.num(size=4) }}
+                </div>
+                {{ views_num_form.submit_view }}
+            </form>                
+        {% endfor %}
+    </div>
+    
+{% endblock %}
