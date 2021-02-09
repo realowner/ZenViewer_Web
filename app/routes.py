@@ -14,7 +14,7 @@ from app.models import LinkQueue, BrowsingHistory
 @app.route('/', methods=['GET', 'POST'])
 def index():
 
-    return render_template('index2.html')
+    return render_template('index.html')
 
 @app.route('/queue', methods=['GET', 'POST'])
 def queue():
@@ -73,7 +73,7 @@ def start(id):
         if proxies == None:
             print('No suitable proxy')
         else:
-            for count in range(1):
+            for count in range(views_num_form.num.data):
                 thread = Thread(target=alg.read_article_withwhile, name=f'THREAD {count+1}', args=(count+1, links))
                 thread_list.append(thread)
                 thread.start()
@@ -96,7 +96,7 @@ def start(id):
             flash('[INFO] Successfully completed!')
             return redirect(url_for('views'))
         else:
-            flash('[INFO] View fail!')
+            flash('[INFO] No suitable proxy, try again!')
             return redirect(url_for('views'))
         ###############################
 
@@ -110,5 +110,5 @@ def start(id):
         # return redirect(url_for('views'))
     except Exception as ex:
         print(ex)
-        flash('[INFO] Viewer failed!')
+        flash('[ERROR] Viewer failed!')
         return redirect(url_for('views'))

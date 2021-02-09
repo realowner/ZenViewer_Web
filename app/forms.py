@@ -9,10 +9,18 @@ class LinkQueueForm(FlaskForm):
     views = IntegerField('How many views:', validators=[DataRequired()])
     submit_link = SubmitField('Add to queue')
 
-    def validate_url(self, url):
-        url_from_db = LinkQueue.query.filter_by(url=url.data).first()
+    def validate_url_for_queue(self, url_for_queue):
+        url_from_db = LinkQueue.query.filter_by(url=url_for_queue.data).first()
         if url_from_db is not None:
-            raise ValidationError('Url already exist!')
+            raise ValidationError('Url already exist.')   
+        if 'https://' not in url_for_queue.data:
+            raise ValidationError('Url not valid.')
+
+    def validate_views(self, views):
+        if type(views.data) is not int:
+            raise ValidationError('Not int')
+        if views.data <= 0:
+            raise ValidationError('Num not valid.')
 
 
 class NumberOfViewes(FlaskForm):

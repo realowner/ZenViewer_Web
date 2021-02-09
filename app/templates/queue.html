@@ -19,6 +19,9 @@
             <div>
                 {{ queue_form.views.label }}
                 {{ queue_form.views(size=4) }}
+                {% for error in queue_form.views.errors %}
+                    <span style="color: red; font-size: 10pt;">{{ error }}</span>
+                {% endfor %}
             </div>
             {{ queue_form.submit_link }}
         </form>
@@ -29,9 +32,9 @@
             {% for link in queue_links %}
                 <tr>
                     <td>{{ link.id }}</td>
-                    <td style="width: 80%;"><a href="{{ link.url }}">{{ link.url }}</a></td>
+                    <td style="text-align: left;"><a href="{{ link.url }}">{{ link.url }}</a></td>
                     <td>{{ link.views }}</td>
-                    <td><a href="/queue/{{ link.id }}/delete">Delete</a></td>
+                    <td style="border: none;"><a href="/queue/{{ link.id }}/delete" class="queue-table-delete-btn"><i class="fa fa-trash"></i></a></td>
                 </tr>
             {% endfor %}
         </table>

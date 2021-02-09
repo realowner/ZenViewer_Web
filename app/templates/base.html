@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>WebZenViewer</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style2.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 </head>
 <body class="main-container">
     <section class="content">
@@ -23,16 +24,16 @@
             <section class="left-bar-content">
 
                 <section class="lbc-head">
-                    <h1>WebZenViewer 1.0</h1>
-                    <a href="{{ url_for('index') }}">Reload</a>
+                    <h1 class="title">WebZenViewer 1.0</h1>
+                    <a href="{{ url_for('index') }}" class="lbc-reload-btn">Reload</a>
                 </section>
 
                 <section class="lbc-menu">
-                    <ul>
-                        <li><a href="{{ url_for('views') }}">VIEWS</a></li>
-                        <li><a href="{{ url_for('queue') }}">VIEWS QUEUE</a></li>
-                        <li><a href="{{ url_for('index') }}">DATABASE</a></li>
-                    </ul>
+                    <div class="lbc-menu-list">
+                        <a href="{{ url_for('views') }}" class="lbc-menu-list-item">VIEWS</a>
+                        <a href="{{ url_for('queue') }}" class="lbc-menu-list-item">LINK QUEUE</a>
+                        <a href="{{ url_for('index') }}" class="lbc-menu-list-item">DATABASE</a>
+                    </div>
  
                 </section>
 
