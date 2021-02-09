@@ -4,6 +4,7 @@ import time
 
 from app.models import BrowsingHistory
 from app import database
+from app.log import *
 
 from .browser import Browser as brw
 from .secondary.GetProxy import GetProxy as gpr
@@ -30,7 +31,7 @@ class Algorithm:
                 cycle_counter += 1
 
                 if cycle_counter > 10:
-                    print(f'    [THREAD {number} - LINK {shu.url_shortener(link.url)}]   no suitable proxy, try again')
+                    logging.info(f'[THREAD {number} - LINK {shu.url_shortener(link.url)}]   no suitable proxy, try again')
                     break
 
                 ip = next(ip_cycler)
@@ -68,17 +69,17 @@ class Algorithm:
                             history_insert = BrowsingHistory(url=link.url, ip=ip)
                             database.session.add(history_insert)
                             database.session.commit()
-                            print(f'    [THREAD {number} - LINK {shu.url_shortener(link.url)}]   {ip}:{port} insert DONE')
+                            logging.info(f'[THREAD {number} - LINK {shu.url_shortener(link.url)}]   {ip}:{port} insert DONE')
                         except Exception as insert_ex:
-                            print(insert_ex)
-                            print(f'    [THREAD {number} - LINK {shu.url_shortener(link.url)}]   {ip}:{port} insert FAIL')
+                            logging.exception(insert_ex)
+                            logging.info(f'[THREAD {number} - LINK {shu.url_shortener(link.url)}]   {ip}:{port} insert FAIL')
                         itp.simple_info(number, link.url, ip, port)
                         break
 
                     except:
-                        print(f'    [THREAD {number} - LINK {shu.url_shortener(link.url)}]   {ip}:{port} bad proxy')
+                        logging.info(f'[THREAD {number} - LINK {shu.url_shortener(link.url)}]   {ip}:{port} bad proxy')
                     finally:
                         browser.close()
                         browser.quit()
                 else:
-                    print(f'    [THREAD {number} - LINK {shu.url_shortener(link.url)}]   link already viewed with {ip}:{port}')
+                    logging.info(f'[THREAD {number} - LINK {shu.url_shortener(link.url)}]   link already viewed with {ip}:{port}')

@@ -22,7 +22,7 @@ class Browser:
             options.set_preference('network.proxy.ssl', ip)
             options.set_preference('network.proxy.ssl_port', port)
 
-        # options.headless = True
+        options.headless = True
 
         browser = webdriver.Firefox(
             # executable_path="firefoxdriver\geckodriver.exe",

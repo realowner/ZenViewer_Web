@@ -1,4 +1,5 @@
 from .ShortUrl import ShortUrl as shu
+from app.log import *
 
 class InfoToPrint:
 
@@ -23,4 +24,4 @@ class InfoToPrint:
         ScrollTime: {article_info['time_to_scroll']}''')
 
     def simple_info(number, link, ip, port):
-        print(f'    [THREAD {number} - LINK {shu.url_shortener(link)}]   proxy {ip}:{port} ...shutdown')
+        logging.info(f'[THREAD {number} - LINK {shu.url_shortener(link)}]   proxy {ip}:{port} ...shutdown')

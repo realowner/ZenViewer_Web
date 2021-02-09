@@ -5,6 +5,7 @@ import time
 
 from .zensel.algorithm import Algorithm as alg
 from .zensel.secondary.GetProxy import GetProxy as gpr
+from .log import *
 
 from app import app, database
 from app.forms import LinkQueueForm, NumberOfViewes
@@ -61,36 +62,34 @@ def start(id):
     try:
         before_urls_count = len([item.ip for item in BrowsingHistory.query.filter_by(url=links[0].url)])
     except Exception as count_ex:
-        print(count_ex)
+        logging.exception(count_ex)
         before_urls_count = 0
 
-    print(f'---> BUC: {before_urls_count}')
+    logging.info(f'---> BUC: {before_urls_count}')
 
     proxies = gpr.get_list()
     try:
         ###############################
         thread_list = []
         if proxies == None:
-            print('No suitable proxy')
+            logging.info('No suitable proxy')
         else:
             for count in range(views_num_form.num.data):
                 thread = Thread(target=alg.read_article_withwhile, name=f'THREAD {count+1}', args=(count+1, links))
                 thread_list.append(thread)
                 thread.start()
                 start_time = time.time()
-                print(f'> THREAD {count+1} started')
+                logging.info(f'> THREAD {count+1} started')
 
             for thr in thread_list:
                 thr.join()
-                print(f'> {thr.name} stopped')
-                print(f'    - time: {time.time() - start_time}')
+                logging.info(f'> {thr.name} stopped - time: {time.time() - start_time}')
 
-        print('\nCOMPLETED')
-        print(f'TIME: {time.time() - start_time}')
+        logging.info(f'COMPLETED WITH TIME: {time.time() - start_time}')
 
         after_urls_count = len([item.ip for item in BrowsingHistory.query.filter_by(url=links[0].url)])
 
-        print(f'---> AUC: {after_urls_count}')
+        logging.info(f'---> AUC: {after_urls_count}')
 
         if after_urls_count > before_urls_count:
             flash('[INFO] Successfully completed!')
@@ -109,6 +108,18 @@ def start(id):
         # flash('[INFO] Successfully completed!')
         # return redirect(url_for('views'))
     except Exception as ex:
-        print(ex)
+        logging.exception(ex)
         flash('[ERROR] Viewer failed!')
         return redirect(url_for('views'))
+
+
+@app.route('/database')
+def database():
+
+    return render_template('database.html')
+
+
+@app.route('/logs')
+def logs():
+
+    return render_template('logs.html')
