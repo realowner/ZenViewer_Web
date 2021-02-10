@@ -38,48 +38,53 @@ class Algorithm:
                 port = port_dict.get(ip)
 
                 try:
-                    ip_from_db = [item.ip.data for item in BrowsingHistory.query.filter_by(url=link.url)]
+                    ip_from_db = [item.ip for item in BrowsingHistory.query.filter_by(url=link.url).all()]
                 except:
                     ip_from_db = []
 
                 if ip not in ip_from_db:
 
-                    browser = brw.my_browser(ip, port)
-                    browser.set_page_load_timeout(20)
                     try:
-                        browser.get(link.url)
-                        time.sleep(10)
-                        div = browser.find_element_by_class_name('article-render')
+                        history_insert = BrowsingHistory(url=link.url, ip=ip)
+                        database.session.add(history_insert)
+                        database.session.commit()
+                        logging.info(f'[THREAD {number} - LINK {shu.url_shortener(link.url)}]   {ip}:{port} insert DONE')
 
+                        browser = brw.my_browser(ip, port)
+                        browser.set_page_load_timeout(20)
                         try:
-                            read_time = browser.find_element_by_xpath('/html/body/div[3]/div[1]/article/div/div[2]/footer/div/div/div[3]/div[2]/span[2]').text
-                            article_info = ttr.determine(read_time, div.size['height'])
-                            time.sleep(article_info['time_to_scroll'])
-                            for scr_num in range(0, article_info['scrolls']):
-                                browser.execute_script(f"window.scrollBy(0,{article_info['scroll_down']})")
+                            browser.get(link.url)
+                            time.sleep(10)
+                            div = browser.find_element_by_class_name('article-render')
+
+                            try:
+                                read_time = browser.find_element_by_xpath('/html/body/div[3]/div[1]/article/div/div[2]/footer/div/div/div[3]/div[2]/span[2]').text
+                                article_info = ttr.determine(read_time, div.size['height'])
                                 time.sleep(article_info['time_to_scroll'])
+                                for scr_num in range(0, article_info['scrolls']):
+                                    browser.execute_script(f"window.scrollBy(0,{article_info['scroll_down']})")
+                                    time.sleep(article_info['time_to_scroll'])
+                            except:
+                                time.sleep(20)
+                                article_info = ttr.determine_except(div.size['height'])
+                                for scr_num in range(0, article_info['scrolls']):
+                                    browser.execute_script(f"window.scrollBy(0,{article_info['scroll_down']})")
+                                    time.sleep(article_info['time_to_scroll'])
+                            
+                            itp.simple_info(number, link.url, ip, port)
+                            break
+
                         except:
-                            time.sleep(20)
-                            article_info = ttr.determine_except(div.size['height'])
-                            for scr_num in range(0, article_info['scrolls']):
-                                browser.execute_script(f"window.scrollBy(0,{article_info['scroll_down']})")
-                                time.sleep(article_info['time_to_scroll'])
-                        
-                        try:
-                            history_insert = BrowsingHistory(url=link.url, ip=ip)
-                            database.session.add(history_insert)
+                            logging.info(f'[THREAD {number} - LINK {shu.url_shortener(link.url)}]   {ip}:{port} bad proxy')
+                            database.session.delete(history_insert)
                             database.session.commit()
-                            logging.info(f'[THREAD {number} - LINK {shu.url_shortener(link.url)}]   {ip}:{port} insert DONE')
-                        except Exception as insert_ex:
-                            logging.exception(insert_ex)
-                            logging.info(f'[THREAD {number} - LINK {shu.url_shortener(link.url)}]   {ip}:{port} insert FAIL')
-                        itp.simple_info(number, link.url, ip, port)
-                        break
+                        finally:
+                            browser.close()
+                            browser.quit()
 
-                    except:
-                        logging.info(f'[THREAD {number} - LINK {shu.url_shortener(link.url)}]   {ip}:{port} bad proxy')
-                    finally:
-                        browser.close()
-                        browser.quit()
+                    except Exception as insert_ex:
+                        logging.exception(insert_ex)
+                        logging.info(f'[THREAD {number} - LINK {shu.url_shortener(link.url)}]   {ip}:{port} insert FAIL')
+ 
                 else:
                     logging.info(f'[THREAD {number} - LINK {shu.url_shortener(link.url)}]   link already viewed with {ip}:{port}')

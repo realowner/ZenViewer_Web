@@ -3,7 +3,34 @@
 {% block rightbar %}
 
     <div class="right-bar-content-head">
-        <h1>COMING SOON...</h1>
+        <h1>VIEWER HISTORY</h1>
+    </div>
+
+    <div class="right-bar-content-form">
+        <form method="post" class="filter-form">
+            {{ filter_form.hidden_tag() }}
+            <div>
+                {{ filter_form.curr_url.label }}
+                {{ filter_form.curr_url }}
+            </div>
+            <div>
+                {{ filter_form.submit_filter }}
+                {{ filter_form.submit_delete }}
+            </div>
+        </form>
+    </div>
+
+    <div class="right-bar-content-table">
+        <table class="queue-table">
+            {% for row in history %}
+                <tr>
+                    <td>{{ row.id }}</td>
+                    <td style="text-align: left;"><a href="{{ row.url }}">{{ row.url }}</a></td>
+                    <td>{{ row.ip }}</td>
+                    <td style="border: none;"><a href="#" class="queue-table-delete-btn"><i class="fa fa-trash"></i></a></td>
+                </tr>
+            {% endfor %}
+        </table>
     </div>
 
 {% endblock %}

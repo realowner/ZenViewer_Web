@@ -151,3 +151,7 @@ h1, p{
     display: flex;
     justify-content: space-between;
 }
+
+.filter-form{
+    display: flex;
+}

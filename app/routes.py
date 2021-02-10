@@ -8,7 +8,7 @@ from .zensel.secondary.GetProxy import GetProxy as gpr
 from .log import *
 
 from app import app, database
-from app.forms import LinkQueueForm, NumberOfViewes
+from app.forms import LinkQueueForm, NumberOfViewes, FilterForm
 from app.models import LinkQueue, BrowsingHistory
 
 
@@ -80,6 +80,7 @@ def start(id):
                 thread.start()
                 start_time = time.time()
                 logging.info(f'> THREAD {count+1} started')
+                time.sleep(5)
 
             for thr in thread_list:
                 thr.join()
@@ -90,23 +91,21 @@ def start(id):
         after_urls_count = len([item.ip for item in BrowsingHistory.query.filter_by(url=links[0].url)])
 
         logging.info(f'---> AUC: {after_urls_count}')
+        difference = after_urls_count - before_urls_count
 
         if after_urls_count > before_urls_count:
-            flash('[INFO] Successfully completed!')
+            for l in links:
+                l.views = l.views - difference
+                if l.views == 0:
+                    database.session.delete(l)
+            database.session.commit()
+
+            flash(f'[INFO] Successfully completed. {difference} of {views_num_form.num.data}')
             return redirect(url_for('views'))
         else:
-            flash('[INFO] No suitable proxy, try again!')
+            flash('[INFO] No suitable proxy or bad url, try again!')
             return redirect(url_for('views'))
         ###############################
-
-        # link = LinkQueue.query.filter_by(id=id)
-        # for l in link:
-        #     l.views = l.views - views_num_form.num.data
-        #     if l.views == 0:
-        #         database.session.delete(l)
-        # database.session.commit()
-        # flash('[INFO] Successfully completed!')
-        # return redirect(url_for('views'))
     except Exception as ex:
         logging.exception(ex)
         flash('[ERROR] Viewer failed!')
@@ -114,9 +113,11 @@ def start(id):
 
 
 @app.route('/database')
-def database():
+def database_page():
+    filter_form = FilterForm()
+    history = BrowsingHistory.query.all()
 
-    return render_template('database.html')
+    return render_template('database.html', filter_form=filter_form, history=history)
 
 
 @app.route('/logs')

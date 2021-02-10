@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import IntegerField, TextField, SubmitField
 from wtforms.validators import DataRequired, ValidationError
+from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from app.models import LinkQueue
 
 
@@ -27,3 +28,9 @@ class NumberOfViewes(FlaskForm):
     # url_for_viewer = TextField('Url:', validators=[DataRequired()])
     num = IntegerField('Views:', validators=[DataRequired()])
     submit_view = SubmitField('Start')
+
+
+class FilterForm(FlaskForm):
+    curr_url = QuerySelectField('Url', query_factory=lambda: LinkQueue.query.all(), get_label='url')
+    submit_filter = SubmitField('Search')
+    submit_delete = SubmitField('Delete')
