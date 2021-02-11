@@ -65,7 +65,6 @@ class Algorithm:
                                     browser.execute_script(f"window.scrollBy(0,{article_info['scroll_down']})")
                                     time.sleep(article_info['time_to_scroll'])
                             except:
-                                # time.sleep(20)
                                 article_info = ttr.determine_except(div.size['height'])
                                 for scr_num in range(0, article_info['scrolls']):
                                     browser.execute_script(f"window.scrollBy(0,{article_info['scroll_down']})")
