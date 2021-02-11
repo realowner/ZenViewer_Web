@@ -1,3 +1,4 @@
+from flask.globals import session
 from flask.helpers import flash
 from flask import render_template, flash, redirect, url_for
 from threading import Thread
@@ -112,10 +113,21 @@ def start(id):
         return redirect(url_for('views'))
 
 
-@app.route('/database')
+@app.route('/database', methods=['GET', 'POST'])
 def database_page():
     filter_form = FilterForm()
     history = BrowsingHistory.query.all()
+
+    if filter_form.validate_on_submit():
+        if filter_form.data['submit_filter'] == True:
+            history = BrowsingHistory.query.filter_by(url=filter_form.curr_url.data.url).all()
+            return render_template('database.html', filter_form=filter_form, history=history)
+        if filter_form.data['submit_delete'] == True:
+            links_to_delete = BrowsingHistory.query.filter_by(url=filter_form.curr_url.data.url).all()
+            for link in links_to_delete:
+                database.session.delete(link)
+            database.session.commit()
+            return redirect(url_for('database_page'))
 
     return render_template('database.html', filter_form=filter_form, history=history)
 

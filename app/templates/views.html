@@ -10,16 +10,16 @@
         {% for link in queue_links %}
             <hr>
             <div class="right-bar-content-links">
-                <div style="display: flex; width: 650px">
+                <div class="rbc-info">
                     <p>{{ link.id }}.</p>
                     <p>{{ link.url }}</p>
                 </div>
                 <form method="post" class="views-num-form" action="{{ url_for('start', id=link.id) }}">
                     <div style="margin-right: 20px">
                         {{ views_num_form.num.label }}
-                        {{ views_num_form.num(size=4) }}
+                        {{ views_num_form.num(class_='rbc-num-field') }}
                     </div>
-                    {{ views_num_form.submit_view }}
+                    {{ views_num_form.submit_view(class_='views-btn') }}
                 </form>
             </div>
         {% endfor %}

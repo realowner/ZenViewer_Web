@@ -4,6 +4,7 @@
 
     <div class="right-bar-content-head">
         <h1>VIEWER HISTORY</h1>
+
     </div>
 
     <div class="right-bar-content-form">
@@ -11,11 +12,11 @@
             {{ filter_form.hidden_tag() }}
             <div>
                 {{ filter_form.curr_url.label }}
-                {{ filter_form.curr_url }}
+                {{ filter_form.curr_url(class_='select-field') }}
             </div>
             <div>
-                {{ filter_form.submit_filter }}
-                {{ filter_form.submit_delete }}
+                {{ filter_form.submit_filter(class_='database-btn') }}
+                {{ filter_form.submit_delete(class_='database-btn') }}
             </div>
         </form>
     </div>
@@ -27,7 +28,7 @@
                     <td>{{ row.id }}</td>
                     <td style="text-align: left;"><a href="{{ row.url }}">{{ row.url }}</a></td>
                     <td>{{ row.ip }}</td>
-                    <td style="border: none;"><a href="#" class="queue-table-delete-btn"><i class="fa fa-trash"></i></a></td>
+                    <!-- <td style="border: none;"><a href="#" class="queue-table-delete-btn"><i class="fa fa-trash"></i></a></td> -->
                 </tr>
             {% endfor %}
         </table>

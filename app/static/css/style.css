@@ -115,10 +115,72 @@ h1, p{
     margin-bottom: 30px;
 }
 
+.rbc-info{
+    display: flex; 
+    width: 650px; 
+    font-size: 14px;
+}
+
+.rbc-num-field{
+    width: 60px;
+    height: 25px;
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: white;
+}
+
+.views-btn{
+    height: 29px;
+    width: 65px;
+    border: none;
+    border-radius: 5px;
+    background-color: rgb(141, 0, 0);
+    color: white;
+}
+
+.views-btn:hover{
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: white;
+    color: black;
+}
+
 .queue_form{
     display: flex;
     justify-content: space-between;
     /* border: 1px solid red; */
+}
+
+.queue-url-field{
+    width: 600px;
+    height: 25px;
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: white;
+}
+
+.queue-views-field{
+    width: 60px;
+    height: 25px;
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: white;
+}
+
+.queue-btn{
+    height: 29px;
+    width: 100px;
+    border: none;
+    border-radius: 5px;
+    background-color: rgb(141, 0, 0);
+    color: white;
+}
+
+.queue-btn:hover{
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: white;
+    color: black;
 }
 
 .queue-table{
@@ -154,4 +216,30 @@ h1, p{
 
 .filter-form{
     display: flex;
+    justify-content: space-between;
+}
+
+.select-field{
+    width: 700px;
+    height: 25px;
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: white;
+    
+}
+
+.database-btn{
+    height: 25px;
+    width: 70px;
+    border: none;
+    border-radius: 5px;
+    background-color: rgb(141, 0, 0);
+    color: white;
+}
+
+.database-btn:hover{
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: white;
+    color: black;
 }

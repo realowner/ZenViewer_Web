@@ -11,19 +11,23 @@
             {{ queue_form.hidden_tag() }}
             <div>
                 {{ queue_form.url_for_queue.label }}
-                {{ queue_form.url_for_queue(size=50) }}
-                {% for error in queue_form.url_for_queue.errors %}
-                    <span style="color: red; font-size: 10pt;">{{ error }}</span>
-                {% endfor %}
+                {{ queue_form.url_for_queue(class_='queue-url-field') }}
+                <div>
+                    {% for error in queue_form.url_for_queue.errors %}
+                        <span style="color: red; font-size: 10pt;">{{ error }}</span>
+                    {% endfor %}
+                </div>
             </div>
             <div>
                 {{ queue_form.views.label }}
-                {{ queue_form.views(size=4) }}
-                {% for error in queue_form.views.errors %}
-                    <span style="color: red; font-size: 10pt;">{{ error }}</span>
-                {% endfor %}
+                {{ queue_form.views(class_='queue-views-field') }}
+                <div>
+                    {% for error in queue_form.views.errors %}
+                        <span style="color: red; font-size: 10pt;">{{ error }}</span>
+                    {% endfor %}
+                </div>
             </div>
-            {{ queue_form.submit_link }}
+            {{ queue_form.submit_link(class_='queue-btn') }}
         </form>
     </div>
 

@@ -7,7 +7,7 @@ from app.models import LinkQueue
 
 class LinkQueueForm(FlaskForm):
     url_for_queue = TextField('Url:', validators=[DataRequired()])
-    views = IntegerField('How many views:', validators=[DataRequired()])
+    views = IntegerField('Views:', validators=[DataRequired()])
     submit_link = SubmitField('Add to queue')
 
     def validate_url_for_queue(self, url_for_queue):
