@@ -1,6 +1,7 @@
 from itertools import cycle
 
 import time
+import math
 
 from app.models import BrowsingHistory
 from app import database
@@ -30,9 +31,16 @@ class Algorithm:
             while True:
                 cycle_counter += 1
 
-                if cycle_counter > 10:
-                    logging.info(f'[THREAD {number} - LINK {shu.url_shortener(link.url)}]   no suitable proxy, try again')
-                    break
+                # rework
+                if cycle_counter == 11:
+                    logging.info(f'[THREAD {number} - LINK {link.id}]   no suitable proxy, 30s sleep')
+                    cycle_counter = 0
+                    time.sleep(30)
+                    proxies = gpr.get_list()
+                    for prx in proxies:
+                        ip_list.append(prx['host'])
+                        port_dict.update({prx["host"]: prx["port"]})  
+                    ip_cycler = cycle(ip_list)
 
                 ip = next(ip_cycler)
                 port = port_dict.get(ip)
@@ -48,13 +56,13 @@ class Algorithm:
                         history_insert = BrowsingHistory(url=link.url, ip=ip)
                         database.session.add(history_insert)
                         database.session.commit()
-                        logging.info(f'[THREAD {number} - LINK {shu.url_shortener(link.url)}]   {ip}:{port} insert DONE')
+                        logging.info(f'[THREAD {number} - LINK {link.id}]   {ip}:{port} insert DONE')
 
                         browser = brw.my_browser(ip, port)
-                        browser.set_page_load_timeout(20)
+                        browser.set_page_load_timeout(30)
                         try:
                             browser.get(link.url)
-                            time.sleep(10)
+                            time.sleep(20)
                             div = browser.find_element_by_class_name('article-render')
 
                             try:
@@ -64,17 +72,24 @@ class Algorithm:
                                 for scr_num in range(0, article_info['scrolls']):
                                     browser.execute_script(f"window.scrollBy(0,{article_info['scroll_down']})")
                                     time.sleep(article_info['time_to_scroll'])
+
+                                like_button = browser.find_element_by_xpath('/html/body/div[3]/div[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/button')
+                                like_button.click()
+                                time.sleep(20)
+
+                                logging.info(f'[THREAD {number} - LINK {link.id}]   ALG DETERMINE')
                             except:
-                                article_info = ttr.determine_except(div.size['height'])
+                                article_info = ttr.determine_except(div_height=div.size['height'], div_text=div.text)
                                 for scr_num in range(0, article_info['scrolls']):
                                     browser.execute_script(f"window.scrollBy(0,{article_info['scroll_down']})")
                                     time.sleep(article_info['time_to_scroll'])
+                                logging.info(f'[THREAD {number} - LINK {link.id}]   ALG DETERMINE EXCEPT | TT:{article_info["total_time"]}, NM:{article_info["num_to_multiply"]}')
                             
-                            itp.simple_info(number, link.url, ip, port)
+                            itp.simple_info(number, link.id, ip, port)
                             break
 
                         except:
-                            logging.info(f'[THREAD {number} - LINK {shu.url_shortener(link.url)}]   {ip}:{port} bad proxy')
+                            logging.info(f'[THREAD {number} - LINK {link.id}]   {ip}:{port} bad proxy')
                             database.session.delete(history_insert)
                             database.session.commit()
                         finally:
@@ -83,7 +98,7 @@ class Algorithm:
 
                     except Exception as insert_ex:
                         logging.exception(insert_ex)
-                        logging.info(f'[THREAD {number} - LINK {shu.url_shortener(link.url)}]   {ip}:{port} insert FAIL')
+                        logging.info(f'[THREAD {number} - LINK {link.id}]   {ip}:{port} insert FAIL')
  
                 else:
-                    logging.info(f'[THREAD {number} - LINK {shu.url_shortener(link.url)}]   link already viewed with {ip}:{port}')
+                    logging.info(f'[THREAD {number} - LINK {link.id}]   link already viewed with {ip}:{port}')

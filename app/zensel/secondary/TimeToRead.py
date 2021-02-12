@@ -30,24 +30,31 @@ class TimeToRead:
             'article_height': article_height,
             'scroll_down': int(scroll_down),
             'scrolls': scrolls,
-            'time_to_scroll': time_to_scroll,
+            'time_to_scroll': time_to_scroll + time_to_scroll/5,
             'thread_num': thread_num
         }
 
         return result
 
-    def determine_except(div_height):
+    def determine_except(div_height, div_text):
 
+        article_text = div_text
+        num_to_multiply = math.ceil(len(article_text) / 1500)
         article_height = div_height
         scroll_down = 700.0/2
         scrolls = math.ceil(article_height/scroll_down)
-        time_to_scroll = 20
+        
+        total_time = 60 * num_to_multiply
+
+        time_to_scroll = (60 * num_to_multiply)/scrolls
         
         result = {
             'article_height': article_height,
             'scroll_down': int(scroll_down),
             'scrolls': scrolls,
-            'time_to_scroll': time_to_scroll
+            'time_to_scroll': time_to_scroll,
+            'total_time': total_time,
+            'num_to_multiply': num_to_multiply
         }
 
         return result
