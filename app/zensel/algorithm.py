@@ -16,7 +16,8 @@ from .secondary.InfoToPrint import InfoToPrint as itp
 
 class Algorithm:
 
-    def read_article_withwhile(number, links):
+    def read_article_withwhile(number, links, views_num):
+        total_views = 0
         cycle_counter = 0
         ip_list = []
         port_dict = {}
@@ -28,18 +29,19 @@ class Algorithm:
         ip_cycler = cycle(ip_list)
 
         for link in links:
-            while True:
+            while total_views != views_num:
                 cycle_counter += 1
 
-                # rework
                 if cycle_counter == 11:
-                    logging.info(f'[THREAD {number} - LINK {link.id}]   no suitable proxy, 30s sleep')
+                    logging.info(f'[THREAD {number} - LINK {link.id}]   no suitable proxy, 60s sleep')
                     cycle_counter = 0
-                    time.sleep(30)
+                    ip_list = []
+                    port_dict = {}
+                    time.sleep(60)
                     proxies = gpr.get_list()
                     for prx in proxies:
                         ip_list.append(prx['host'])
-                        port_dict.update({prx["host"]: prx["port"]})  
+                        port_dict.update({prx["host"]: prx["port"]})
                     ip_cycler = cycle(ip_list)
 
                 ip = next(ip_cycler)
@@ -83,10 +85,10 @@ class Algorithm:
                                 for scr_num in range(0, article_info['scrolls']):
                                     browser.execute_script(f"window.scrollBy(0,{article_info['scroll_down']})")
                                     time.sleep(article_info['time_to_scroll'])
-                                logging.info(f'[THREAD {number} - LINK {link.id}]   ALG DETERMINE EXCEPT | TT:{article_info["total_time"]}, NM:{article_info["num_to_multiply"]}')
+                                logging.info(f'[THREAD {number} - LINK {link.id}]   ALG DETERMINE EXCEPT')
                             
-                            itp.simple_info(number, link.id, ip, port)
-                            break
+                            total_views += 1
+                            logging.info(f'[THREAD {number} - LINK {link.id}]   proxy {ip}:{port} ...{total_views} of {views_num} views DONE')
 
                         except:
                             logging.info(f'[THREAD {number} - LINK {link.id}]   {ip}:{port} bad proxy')

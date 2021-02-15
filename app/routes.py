@@ -6,6 +6,7 @@ import time
 
 from .zensel.algorithm import Algorithm as alg
 from .zensel.secondary.GetProxy import GetProxy as gpr
+from .zensel.secondary.ThreadNum import ThreadNum as thn
 from .log import *
 
 from app import app, database
@@ -68,6 +69,9 @@ def start(id):
 
     logging.info(f'---> BUC: {before_urls_count}')
 
+    thr_num = thn.how_many_threads(views_num_form.num.data)
+    views_num = int(views_num_form.num.data / thr_num)
+
     proxies = gpr.get_list()
     try:
         ###############################
@@ -75,8 +79,8 @@ def start(id):
         if proxies == None:
             logging.info('No suitable proxy')
         else:
-            for count in range(views_num_form.num.data):
-                thread = Thread(target=alg.read_article_withwhile, name=f'THREAD {count+1}', args=(count+1, links))
+            for count in range(thr_num):
+                thread = Thread(target=alg.read_article_withwhile, name=f'THREAD {count+1}', args=(count+1, links, views_num))
                 thread_list.append(thread)
                 thread.start()
                 start_time = time.time()
@@ -97,7 +101,7 @@ def start(id):
         if after_urls_count > before_urls_count:
             for l in links:
                 l.views = l.views - difference
-                if l.views == 0:
+                if l.views <= 0:
                     database.session.delete(l)
             database.session.commit()
 
