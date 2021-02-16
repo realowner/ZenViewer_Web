@@ -3,7 +3,7 @@
 {% block rightbar %}
 
     <div class="right-bar-content-head">
-        <h1>VIEWER HISTORY</h1>
+        <h1>VIEWER HISTORY ({{ curr_object }})</h1>
 
     </div>
 
@@ -22,6 +22,7 @@
     </div>
 
     <div class="right-bar-content-table">
+        <p>Total views: {{ count }}</p>
         <table class="queue-table">
             {% for row in history %}
                 <tr>

@@ -5,12 +5,13 @@ from threading import Thread
 import time
 
 from .zensel.algorithm import Algorithm as alg
+from .zensel.secondary_algorithm import SecondaryAlgorithm as salg
 from .zensel.secondary.GetProxy import GetProxy as gpr
 from .zensel.secondary.ThreadNum import ThreadNum as thn
 from .log import *
 
 from app import app, database
-from app.forms import LinkQueueForm, NumberOfViewes, FilterForm
+from app.forms import LinkQueueForm, NumberOfViewes, FilterForm, AllLinkViewes
 from app.models import LinkQueue, BrowsingHistory
 
 
@@ -50,10 +51,69 @@ def delete(id):
 
 @app.route('/views', methods=['GET', 'POST'])
 def views():
+    all_links_form = AllLinkViewes()
     views_num_form = NumberOfViewes()
     queue_links = LinkQueue.query.all()
+    url_slices = lambda urls, count: [urls[i:i+count] for i in range(0, len(urls), count)]
 
-    return render_template('views.html', views_num_form=views_num_form, queue_links=queue_links)
+    if all_links_form.validate_on_submit():
+        # queue_links_url = [l.url for l in queue_links]
+        thr_num = thn.how_many_threads(len(queue_links))
+        links = url_slices(queue_links, int(len(queue_links)/thr_num))
+        proxies = gpr.get_list()
+
+        try:
+            before_urls_count = len(BrowsingHistory.query.all())
+        except Exception as count_ex:
+            logging.exception(count_ex)
+            before_urls_count = 0
+
+        logging.info(f'---> BUC: {before_urls_count}')
+
+        try:
+            thread_list = []
+            if proxies == None:
+                logging.info('No suitable proxy')
+            else:
+                for count in range(thr_num):
+                    thread = Thread(target=salg.read_article_withwhile, name=f'THREAD {count+1}', args=(count+1, links[count]))
+                    thread_list.append(thread)
+                    thread.start()
+                    start_time = time.time()
+                    logging.info(f'> THREAD {count+1} started')
+                    time.sleep(5)
+
+                for thr in thread_list:
+                    thr.join()
+                    logging.info(f'> {thr.name} stopped - time: {time.time() - start_time}')
+
+            logging.info(f'COMPLETED WITH TIME: {time.time() - start_time}')
+
+            after_urls_count = len(BrowsingHistory.query.all())
+
+            logging.info(f'---> AUC: {after_urls_count}')
+            difference = after_urls_count - before_urls_count
+
+            if after_urls_count > before_urls_count:
+                # for l in links:
+                #     l.views = l.views - difference
+                #     if l.views <= 0:
+                #         database.session.delete(l)
+                # database.session.commit()
+
+                flash(f'[INFO] Successfully completed. {difference} of {len(queue_links)}')
+                return redirect(url_for('views'))
+            else:
+                flash('[INFO] No suitable proxy or bad url, try again!')
+                return redirect(url_for('views'))
+
+        except Exception as ex:
+            logging.exception(ex)
+            flash('[ERROR] Viewer failed!')
+            return redirect(url_for('views'))
+
+
+    return render_template('views.html', all_links_form=all_links_form, views_num_form=views_num_form, queue_links=queue_links)
 
 
 @app.route('/views/<int:id>/start', methods=['GET', 'POST'])
@@ -121,11 +181,15 @@ def start(id):
 def database_page():
     filter_form = FilterForm()
     history = BrowsingHistory.query.all()
+    count = len(history)
+    curr_object = 'All' 
 
     if filter_form.validate_on_submit():
         if filter_form.data['submit_filter'] == True:
             history = BrowsingHistory.query.filter_by(url=filter_form.curr_url.data.url).all()
-            return render_template('database.html', filter_form=filter_form, history=history)
+            count = len(history)
+            curr_object = 'Current'
+            return render_template('database.html', filter_form=filter_form, history=history, count=count, curr_object=curr_object)
         if filter_form.data['submit_delete'] == True:
             links_to_delete = BrowsingHistory.query.filter_by(url=filter_form.curr_url.data.url).all()
             for link in links_to_delete:
@@ -133,7 +197,7 @@ def database_page():
             database.session.commit()
             return redirect(url_for('database_page'))
 
-    return render_template('database.html', filter_form=filter_form, history=history)
+    return render_template('database.html', filter_form=filter_form, history=history, count=count, curr_object=curr_object)
 
 
 @app.route('/logs')

@@ -12,9 +12,9 @@ from .secondary.GetProxy import GetProxy as gpr
 from .secondary.TimeToRead import TimeToRead as ttr
 
 
-class Algorithm:
+class SecondaryAlgorithm:
 
-    def read_article_withwhile(number, links, views_num):
+    def read_article_withwhile(number, links):
         total_views = 0
         cycle_counter = 0
         ip_list = []
@@ -27,7 +27,7 @@ class Algorithm:
         ip_cycler = cycle(ip_list)
 
         for link in links:
-            while total_views != views_num:
+            while True:
                 cycle_counter += 1
 
                 if cycle_counter == 11:
@@ -53,9 +53,9 @@ class Algorithm:
                 if ip not in ip_from_db:
 
                     try:
-                        history_insert = BrowsingHistory(url=link.url, ip=ip)
-                        database.session.add(history_insert)
-                        database.session.commit()
+                        # history_insert = BrowsingHistory(url=link.url, ip=ip)
+                        # database.session.add(history_insert)
+                        # database.session.commit()
                         logging.info(f'[THREAD {number} - LINK {link.id}]   {ip}:{port} insert DONE')
 
                         browser = brw.my_browser(ip, port)
@@ -85,13 +85,13 @@ class Algorithm:
                                     time.sleep(article_info['time_to_scroll'])
                                 logging.info(f'[THREAD {number} - LINK {link.id}]   ALG DETERMINE EXCEPT')
                             
-                            total_views += 1
-                            logging.info(f'[THREAD {number} - LINK {link.id}]   proxy {ip}:{port} ...{total_views} of {views_num} views DONE')
+                            logging.info(f'[THREAD {number} - LINK {link.id}]   proxy {ip}:{port} ...COMPLETED')
+                            break
 
                         except:
                             logging.info(f'[THREAD {number} - LINK {link.id}]   {ip}:{port} bad proxy')
-                            database.session.delete(history_insert)
-                            database.session.commit()
+                            # database.session.delete(history_insert)
+                            # database.session.commit()
                         finally:
                             browser.close()
                             browser.quit()

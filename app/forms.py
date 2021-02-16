@@ -30,6 +30,10 @@ class NumberOfViewes(FlaskForm):
     submit_view = SubmitField('Start')
 
 
+class AllLinkViewes(FlaskForm):
+    submit_all = SubmitField('Start All')
+
+
 class FilterForm(FlaskForm):
     curr_url = QuerySelectField('Url', query_factory=lambda: LinkQueue.query.all(), get_label='url')
     submit_filter = SubmitField('Search')

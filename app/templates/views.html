@@ -6,13 +6,22 @@
         <h1>VIEWS<h1>
     </div>
 
+    <div class="right-bar-content-secform">
+        <div class="secform-block">
+            <p>View all links in the queue (one viewing on the first suitable ip)</p>
+            <form method="post">
+                {{ all_links_form.hidden_tag() }}
+                {{ all_links_form.submit_all(class_='all-views-btn') }}
+            </form>
+        </div>
+    </div>
+
     <div class="right-bar-content-form">
         {% for link in queue_links %}
             <hr>
             <div class="right-bar-content-links">
                 <div class="rbc-info">
-                    <p>{{ link.id }}.</p>
-                    <p>{{ link.url }}</p>
+                    <p>{{ link.id }}. {{ link.url }}</p>
                 </div>
                 <form method="post" class="views-num-form" action="{{ url_for('start', id=link.id) }}">
                     <div style="margin-right: 20px">
