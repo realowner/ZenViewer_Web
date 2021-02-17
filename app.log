@@ -1,10 +1,9 @@
-2021-02-17 11:31:11,290 - werkzeug - WARNING -  * Debugger is active!
-2021-02-17 11:31:11,291 - werkzeug - INFO -  * Debugger PIN: 295-486-557
-2021-02-17 11:31:22,242 - werkzeug - INFO - 127.0.0.1 - - [17/Feb/2021 11:31:22] "[37mGET / HTTP/1.1[0m" 200 -
-2021-02-17 11:31:22,319 - werkzeug - INFO - 127.0.0.1 - - [17/Feb/2021 11:31:22] "[37mGET /static/css/style.css HTTP/1.1[0m" 200 -
-2021-02-17 11:31:22,415 - werkzeug - INFO - 127.0.0.1 - - [17/Feb/2021 11:31:22] "[37mGET /static/css/font/yandex/YandexSansText-Regular.ttf HTTP/1.1[0m" 200 -
-2021-02-17 11:31:22,540 - werkzeug - INFO - 127.0.0.1 - - [17/Feb/2021 11:31:22] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
-2021-02-17 11:31:32,950 - werkzeug - INFO - 127.0.0.1 - - [17/Feb/2021 11:31:32] "[37mGET /views HTTP/1.1[0m" 200 -
-2021-02-17 11:31:33,627 - werkzeug - INFO - 127.0.0.1 - - [17/Feb/2021 11:31:33] "[37mGET /queue HTTP/1.1[0m" 200 -
-2021-02-17 11:31:34,328 - werkzeug - INFO - 127.0.0.1 - - [17/Feb/2021 11:31:34] "[37mGET /views HTTP/1.1[0m" 200 -
-2021-02-17 11:31:44,787 - werkzeug - INFO - 127.0.0.1 - - [17/Feb/2021 11:31:44] "[37mGET /views HTTP/1.1[0m" 200 -
+2021-02-17 12:08:33,310 - werkzeug - WARNING -  * Debugger is active!
+2021-02-17 12:08:33,311 - werkzeug - INFO -  * Debugger PIN: 295-486-557
+2021-02-17 12:08:35,068 - werkzeug - INFO - 127.0.0.1 - - [17/Feb/2021 12:08:35] "[37mGET / HTTP/1.1[0m" 200 -
+2021-02-17 12:08:36,716 - werkzeug - INFO - 127.0.0.1 - - [17/Feb/2021 12:08:36] "[37mGET /views HTTP/1.1[0m" 200 -
+2021-02-17 12:08:38,232 - werkzeug - INFO - 127.0.0.1 - - [17/Feb/2021 12:08:38] "[37mGET /queue HTTP/1.1[0m" 200 -
+2021-02-17 12:08:43,274 - werkzeug - INFO - 127.0.0.1 - - [17/Feb/2021 12:08:43] "[37mGET /database HTTP/1.1[0m" 200 -
+2021-02-17 12:08:44,309 - werkzeug - INFO - 127.0.0.1 - - [17/Feb/2021 12:08:44] "[37mGET /queue HTTP/1.1[0m" 200 -
+2021-02-17 12:08:48,371 - werkzeug - INFO - 127.0.0.1 - - [17/Feb/2021 12:08:48] "[37mGET /views HTTP/1.1[0m" 200 -
+2021-02-17 12:08:50,918 - werkzeug - INFO - 127.0.0.1 - - [17/Feb/2021 12:08:50] "[37mGET /database HTTP/1.1[0m" 200 -
