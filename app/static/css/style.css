@@ -122,7 +122,7 @@ h1, p{
 }
 
 .secform-block{
-    width: 540px;
+    width: 600px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -148,10 +148,11 @@ h1, p{
 .all-views-btn{
     height: 30px;
     width: 80px;
-    border: 1px solid white;
+    border: 2px solid white;
     border-radius: 5px;
     background-color: rgb(141, 0, 0);
     color: white;
+    font-size: 15px;
 }
 
 .all-views-btn:hover{

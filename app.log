@@ -1,10 +1,14 @@
-2021-02-17 15:35:20,015 - werkzeug - WARNING -  * Debugger is active!
-2021-02-17 15:35:20,015 - werkzeug - INFO -  * Debugger PIN: 295-486-557
-2021-02-17 15:35:41,432 - werkzeug - INFO - 127.0.0.1 - - [17/Feb/2021 15:35:41] "[37mGET / HTTP/1.1[0m" 200 -
-2021-02-17 15:35:43,050 - werkzeug - INFO - 127.0.0.1 - - [17/Feb/2021 15:35:43] "[37mGET /views HTTP/1.1[0m" 200 -
-2021-02-17 15:35:45,242 - werkzeug - INFO - 127.0.0.1 - - [17/Feb/2021 15:35:45] "[37mGET /queue HTTP/1.1[0m" 200 -
-2021-02-17 15:35:46,733 - werkzeug - INFO - 127.0.0.1 - - [17/Feb/2021 15:35:46] "[37mGET /database HTTP/1.1[0m" 200 -
-2021-02-17 15:35:47,667 - werkzeug - INFO - 127.0.0.1 - - [17/Feb/2021 15:35:47] "[37mGET /queue HTTP/1.1[0m" 200 -
-2021-02-17 15:35:49,936 - werkzeug - INFO - 127.0.0.1 - - [17/Feb/2021 15:35:49] "[37mGET /database HTTP/1.1[0m" 200 -
-2021-02-17 15:37:01,862 - werkzeug - INFO - 127.0.0.1 - - [17/Feb/2021 15:37:01] "[37mGET /database?page=2 HTTP/1.1[0m" 200 -
-2021-02-17 15:37:08,179 - werkzeug - INFO - 127.0.0.1 - - [17/Feb/2021 15:37:08] "[37mGET /database?page=1 HTTP/1.1[0m" 200 -
+2021-02-17 17:37:29,245 - werkzeug - WARNING -  * Debugger is active!
+2021-02-17 17:37:29,245 - werkzeug - INFO -  * Debugger PIN: 295-486-557
+2021-02-17 17:37:30,448 - werkzeug - INFO - 127.0.0.1 - - [17/Feb/2021 17:37:30] "[37mGET / HTTP/1.1[0m" 200 -
+2021-02-17 17:37:36,675 - werkzeug - INFO - 127.0.0.1 - - [17/Feb/2021 17:37:36] "[37mGET /views HTTP/1.1[0m" 200 -
+2021-02-17 17:37:43,475 - werkzeug - INFO - 127.0.0.1 - - [17/Feb/2021 17:37:43] "[37mGET / HTTP/1.1[0m" 200 -
+2021-02-17 17:37:48,924 - werkzeug - INFO - 127.0.0.1 - - [17/Feb/2021 17:37:48] "[37mGET /queue HTTP/1.1[0m" 200 -
+2021-02-17 17:37:49,542 - werkzeug - INFO - 127.0.0.1 - - [17/Feb/2021 17:37:49] "[37mGET /database HTTP/1.1[0m" 200 -
+2021-02-17 17:37:50,277 - werkzeug - INFO - 127.0.0.1 - - [17/Feb/2021 17:37:50] "[37mGET /database HTTP/1.1[0m" 200 -
+2021-02-17 17:37:51,401 - werkzeug - INFO - 127.0.0.1 - - [17/Feb/2021 17:37:51] "[37mGET /database HTTP/1.1[0m" 200 -
+2021-02-17 17:37:52,044 - werkzeug - INFO - 127.0.0.1 - - [17/Feb/2021 17:37:52] "[37mGET /queue HTTP/1.1[0m" 200 -
+2021-02-17 17:37:52,704 - werkzeug - INFO - 127.0.0.1 - - [17/Feb/2021 17:37:52] "[37mGET /views HTTP/1.1[0m" 200 -
+2021-02-17 17:37:53,219 - werkzeug - INFO - 127.0.0.1 - - [17/Feb/2021 17:37:53] "[37mGET /database HTTP/1.1[0m" 200 -
+2021-02-17 17:43:03,595 - werkzeug - INFO - 127.0.0.1 - - [17/Feb/2021 17:43:03] "[37mGET /queue HTTP/1.1[0m" 200 -
+2021-02-17 17:43:04,599 - werkzeug - INFO - 127.0.0.1 - - [17/Feb/2021 17:43:04] "[37mGET /views HTTP/1.1[0m" 200 -

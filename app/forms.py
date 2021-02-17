@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import IntegerField, TextField, SubmitField
 from wtforms.validators import DataRequired, ValidationError
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
-from app.models import LinkQueue
+from app.models import LinkQueue, BrowsingHistory
 
 
 class LinkQueueForm(FlaskForm):
@@ -36,5 +36,6 @@ class AllLinkViewes(FlaskForm):
 
 class FilterForm(FlaskForm):
     curr_url = QuerySelectField('Url', query_factory=lambda: LinkQueue.query.all(), get_label='url')
+    # curr_url = QuerySelectField('Url', query_factory=lambda: BrowsingHistory.query.all(), get_label='url')
     submit_filter = SubmitField('Search')
     submit_delete = SubmitField('Delete')
