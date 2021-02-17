@@ -53,9 +53,9 @@ class SecondaryAlgorithm:
                 if ip not in ip_from_db:
 
                     try:
-                        # history_insert = BrowsingHistory(url=link.url, ip=ip)
-                        # database.session.add(history_insert)
-                        # database.session.commit()
+                        history_insert = BrowsingHistory(url=link.url, ip=ip)
+                        database.session.add(history_insert)
+                        database.session.commit()
                         logging.info(f'[THREAD {number} - LINK {link.id}]   {ip}:{port} insert DONE')
 
                         browser = brw.my_browser(ip, port)
@@ -90,8 +90,8 @@ class SecondaryAlgorithm:
 
                         except:
                             logging.info(f'[THREAD {number} - LINK {link.id}]   {ip}:{port} bad proxy')
-                            # database.session.delete(history_insert)
-                            # database.session.commit()
+                            database.session.delete(history_insert)
+                            database.session.commit()
                         finally:
                             browser.close()
                             browser.quit()

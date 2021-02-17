@@ -95,11 +95,12 @@ def views():
             difference = after_urls_count - before_urls_count
 
             if after_urls_count > before_urls_count:
-                # for l in links:
-                #     l.views = l.views - difference
-                #     if l.views <= 0:
-                #         database.session.delete(l)
-                # database.session.commit()
+                for link in links:
+                    for l in link:
+                        l.views = l.views - 1
+                        if l.views <= 0:
+                            database.session.delete(l)
+                    database.session.commit()
 
                 flash(f'[INFO] Successfully completed. {difference} of {len(queue_links)}')
                 return redirect(url_for('views'))
