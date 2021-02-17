@@ -273,3 +273,63 @@ h1, p{
     background-color: white;
     color: black;
 }
+
+.right-bar-content-pagination{
+    margin-top: 5px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.pag-next{
+    padding-top: 4px;
+    width: 50px;
+    height: 19px;
+    background-color: rgb(141, 0, 0);
+    border-radius: 5px;
+    color: white;
+    text-align: center;
+    font-size: 12px;
+    text-decoration: none;
+}
+
+.pag-next:hover{
+    width: 48px;
+    height: 17px;
+    background-color: white;
+    border: 1px solid rgb(141, 0, 0);
+    border-radius: 5px;
+    color: rgb(141, 0, 0);
+}
+
+.pag-prev{
+    padding-top: 4px;
+    width: 50px;
+    height: 19px;
+    background-color: rgb(141, 0, 0);
+    border-radius: 5px;
+    color: white;
+    text-align: center;
+    font-size: 12px;
+    text-decoration: none;
+}
+
+.pag-prev:hover{
+    width: 48px;
+    height: 17px;
+    background-color: white;
+    border: 1px solid rgb(141, 0, 0);
+    border-radius: 5px;
+    color: rgb(141, 0, 0);
+}
+
+.pag-disable{
+    padding-top: 3px;
+    width: 48px;
+    height: 18px;
+    background-color: white;
+    border: 1px solid rgb(141, 0, 0);
+    border-radius: 5px;
+    color: rgb(141, 0, 0);
+    text-align: center;
+    font-size: 12px;
+}

@@ -35,4 +35,17 @@
         </table>
     </div>
 
+    <div class="right-bar-content-pagination">
+        {% if prev_page %}
+            <a href="{{ prev_page }}" class="pag-prev">Prev</a>
+        {% else %}
+            <a class="pag-disable">Prev</a>
+        {% endif %}
+        {% if next_page %}
+            <a href="{{ next_page }}" class="pag-next">Next</a>
+        {% else %}
+            <a class="pag-disable">Next</a>
+        {% endif %}
+    </div>
+
 {% endblock %}

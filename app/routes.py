@@ -1,4 +1,4 @@
-from flask.globals import session
+from flask.globals import request, session
 from flask.helpers import flash
 from flask import render_template, flash, redirect, url_for
 from threading import Thread
@@ -57,7 +57,6 @@ def views():
     url_slices = lambda urls, count: [urls[i:i+count] for i in range(0, len(urls), count)]
 
     if all_links_form.validate_on_submit():
-        # queue_links_url = [l.url for l in queue_links]
         thr_num = thn.how_many_threads(len(queue_links))
         links = url_slices(queue_links, int(len(queue_links)/thr_num))
         proxies = gpr.get_list()
@@ -135,7 +134,6 @@ def start(id):
 
     proxies = gpr.get_list()
     try:
-        ###############################
         thread_list = []
         if proxies == None:
             logging.info('No suitable proxy')
@@ -171,7 +169,7 @@ def start(id):
         else:
             flash('[INFO] No suitable proxy or bad url, try again!')
             return redirect(url_for('views'))
-        ###############################
+
     except Exception as ex:
         logging.exception(ex)
         flash('[ERROR] Viewer failed!')
@@ -181,9 +179,13 @@ def start(id):
 @app.route('/database', methods=['GET', 'POST'])
 def database_page():
     filter_form = FilterForm()
-    history = BrowsingHistory.query.all()
-    count = len(history)
-    curr_object = 'All' 
+    page = request.args.get('page', 1, type=int)
+    history = BrowsingHistory.query.paginate(page, 10, False)
+    count = len(BrowsingHistory.query.all())
+    curr_object = 'All'
+
+    next_page = url_for('database_page', page=history.next_num) if history.has_next else None
+    prev_page = url_for('database_page', page=history.prev_num) if history.has_prev else None
 
     if filter_form.validate_on_submit():
         if filter_form.data['submit_filter'] == True:
@@ -198,7 +200,7 @@ def database_page():
             database.session.commit()
             return redirect(url_for('database_page'))
 
-    return render_template('database.html', filter_form=filter_form, history=history, count=count, curr_object=curr_object)
+    return render_template('database.html', filter_form=filter_form, history=history.items, count=count, curr_object=curr_object, next_page=next_page, prev_page=prev_page)
 
 
 @app.route('/logs')
