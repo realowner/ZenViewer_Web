@@ -1,4 +1,4 @@
-# Branch - WebZenViewer with algorithm charRead
+# Branch - WebZenViewer DEVELOP
 from app import app
 
 if __name__ == '__main__':
