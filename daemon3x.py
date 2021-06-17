@@ -122,7 +122,10 @@ class Daemon:
 			pid = None
 		
 		if pid:
-			message = "Сервер запущен на 127.0.0.1:3729\n"
+			message = "Сервер запущен на 127.0.0.1:3729\nКоманда перезапуска: python3 zenviewer.py restart\nКоманда остановки: python3 zenviewer.py stop\n"
+			sys.stderr.write(message)
+		else:
+			message = "Сервер не запущен\nКоманда запуска: python3 zenviewer.py start\n"
 			sys.stderr.write(message)
 
 	def run(self):

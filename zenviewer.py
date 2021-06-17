@@ -15,7 +15,7 @@ if __name__ == '__main__':
     daemon = MyDaemon(f'{basedir}/daemon-zenviewer.pid')
     if len(sys.argv) == 2:
         if 'start' == sys.argv[1]:
-            print('Запущено на 127.0.0.1:3729')
+            print('Запущено на 127.0.0.1:3729\nКоманда перезапуска: python3 zenviewer.py restart\nКоманда остановки: python3 zenviewer.py stop\nКоманда проверки: python3 zenviewer.py status')
             daemon.start()
         elif 'stop' == sys.argv[1]:
             daemon.stop()
