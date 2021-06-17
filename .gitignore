@@ -2,5 +2,7 @@ venv
 __pycache__
 .vscode
 geckodriver.log
-/logs/*
+app.log
+/logs/viewer/*
 !/logs/.gitkeep
+!/logs/viewer/.gitkeep

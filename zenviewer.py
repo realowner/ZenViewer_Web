@@ -6,7 +6,8 @@ from config import basedir
 
 class MyDaemon(Daemon):
     def run(self):
-        app.run(host='localhost', port=3729, debug=True, use_reloader=False)      
+        app.run(host='localhost', port=3729, debug=True, use_reloader=False)
+
 
 if __name__ == '__main__':
     # app.run(host='localhost', port=3729, debug=True)
@@ -14,11 +15,14 @@ if __name__ == '__main__':
     daemon = MyDaemon(f'{basedir}/daemon-zenviewer.pid')
     if len(sys.argv) == 2:
         if 'start' == sys.argv[1]:
+            print('Запущено на 127.0.0.1:3729')
             daemon.start()
         elif 'stop' == sys.argv[1]:
             daemon.stop()
         elif 'restart' == sys.argv[1]:
             daemon.restart()
+        elif 'status' == sys.argv[1]:
+            daemon.status()
         else:
             print("Unknown command")
             sys.exit(2)

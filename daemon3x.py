@@ -67,7 +67,6 @@ class Daemon:
 
 				pid = int(pf.read().strip())
 		except IOError:
-		# except:
 			pid = None
 	
 		if pid:
@@ -88,7 +87,6 @@ class Daemon:
 			with open(self.pidfile,'r') as pf:
 				pid = int(pf.read().strip())
 		except IOError:
-		# except:
 			pid = None
 	
 		if not pid:
@@ -115,6 +113,17 @@ class Daemon:
 		"""Restart the daemon."""
 		self.stop()
 		self.start()
+
+	def status(self):
+		try:
+			with open(self.pidfile,'r') as pf:
+				pid = int(pf.read().strip())
+		except IOError:
+			pid = None
+		
+		if pid:
+			message = "Сервер запущен на 127.0.0.1:3729\n"
+			sys.stderr.write(message)
 
 	def run(self):
 		"""You should override this method when you subclass Daemon.
