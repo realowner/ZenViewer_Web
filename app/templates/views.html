@@ -11,7 +11,11 @@
             <p style="font-size: 18px;">View all links in the queue (one viewing on the first suitable ip)</p>
             <form method="post">
                 {{ all_links_form.hidden_tag() }}
-                {{ all_links_form.submit_all(class_='all-views-btn') }}
+                {% if daemon_viewer %}
+                    {{ all_links_form.submit_all(class_='all-views-btn-dis', disabled=True) }}
+                {% else %}
+                    {{ all_links_form.submit_all(class_='all-views-btn') }}
+                {% endif %}
             </form>
         </div>
     </div>
@@ -36,7 +40,11 @@
                         {{ views_num_form.num.label }}
                         {{ views_num_form.num(class_='rbc-num-field') }}
                     </div>
-                    {{ views_num_form.submit_view(class_='views-btn') }}
+                    {% if daemon_viewer %}
+                        {{ views_num_form.submit_view(class_='views-btn-dis', disabled=True) }}
+                    {% else %}
+                        {{ views_num_form.submit_view(class_='views-btn') }}
+                    {% endif %}
                 </form>
             </div>
         {% endfor %}

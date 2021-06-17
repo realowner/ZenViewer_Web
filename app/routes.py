@@ -1,3 +1,4 @@
+from os import link
 from flask.globals import request
 from flask.helpers import flash
 from flask import render_template, flash, redirect, url_for
@@ -53,12 +54,16 @@ def views():
     views_num_form = NumberOfViewes()
     queue_links = LinkQueue.query.all()
 
+    trdz = enumerate()
+
     for thr in enumerate():
         if thr.name == 'daemonViewer':
             daemon_viewer = True
+            id_in_viewer = thr._args[1]
             break
         else:
             daemon_viewer = False
+            id_in_viewer = None
 
     if all_links_form.validate_on_submit():
         clog = custom_logger(0, 'secondary_alg')
@@ -73,8 +78,15 @@ def views():
         thread.start()
 
         return redirect(url_for('views'))
-
-    return render_template('views.html', all_links_form=all_links_form, views_num_form=views_num_form, queue_links=queue_links, daemon_viewer=daemon_viewer)
+    
+    return render_template(
+        'views.html', 
+        all_links_form=all_links_form, 
+        views_num_form=views_num_form, 
+        queue_links=queue_links, 
+        daemon_viewer=daemon_viewer, 
+        id_in_viewer=id_in_viewer
+    )
 
 
 @app.route('/views/<int:id>/start', methods=['POST'])
@@ -89,7 +101,8 @@ def start(id):
         mlog.exception(count_ex)
         before_urls_count = 0
 
-    thread = Thread(target=dt.daemon_func_alg, name=f'daemonViewer', args=(before_urls_count, views_num_form.num.data, links, clog), daemon=True)
+    # thread = Thread(target=dt.daemon_func_alg, name=f'daemonViewer', args=(before_urls_count, views_num_form.num.data, links, clog), daemon=True)
+    thread = Thread(target=dt.daemon_task_test, name=f'daemonViewer', args=(clog, id), daemon=True)
     thread.start()
 
     return redirect(url_for('views'))

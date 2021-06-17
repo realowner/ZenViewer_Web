@@ -160,6 +160,16 @@ h1, p{
     background-color: white;
 }
 
+.all-views-btn-dis{
+    height: 30px;
+    width: 80px;
+    border-radius: 5px;
+    background-color: black;
+    background-color: #ccc;
+    color: black;
+    font-size: 15px;
+}
+
 .views-btn{
     height: 29px;
     width: 65px;
@@ -173,6 +183,15 @@ h1, p{
     border: 1px solid black;
     border-radius: 5px;
     background-color: white;
+    color: black;
+}
+
+.views-btn-dis {
+    height: 29px;
+    width: 65px;
+    border: none;
+    border-radius: 5px;
+    background-color: #ccc;
     color: black;
 }
 

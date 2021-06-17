@@ -110,3 +110,8 @@ class DaemonTasks:
             clog.info('[ERROR] Viewer failed!')
             # flash('[ERROR] Viewer failed!')
             # return redirect(url_for('views'))
+
+    def daemon_task_test(clog, id):
+        for counter in range (3):
+            clog.info(f'---> [DAEMON TEST TASK] Iteration {counter}')
+            time.sleep(60)
