@@ -24,6 +24,11 @@
     <div class="right-bar-content-table">
         <p>Total views: {{ count }}</p>
         <table class="queue-table">
+            <tr>
+                <td>ID</td>
+                <td>Ссилка на статью</td>
+                <td>Просмотрено с</td>
+            </tr>
             {% for row in history %}
                 <tr>
                     <td>{{ row.id }}</td>

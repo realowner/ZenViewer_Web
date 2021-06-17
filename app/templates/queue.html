@@ -33,6 +33,11 @@
 
     <div class="right-bar-content-table">
         <table class="queue-table">
+            <tr>
+                <td>ID</td>
+                <td>Ссилка на статью</td>
+                <td>Осталось просмотров</td>
+            </tr>
             {% for link in queue_links %}
                 <tr>
                     <td>{{ link.id }}</td>

@@ -1,19 +1,17 @@
-from flask.globals import request, session
+from flask.globals import request
 from flask.helpers import flash
 from flask import render_template, flash, redirect, url_for
-from threading import Thread
+from threading import Thread, enumerate
 import time
 
-from .zensel.algorithm import Algorithm as alg
-from .zensel.secondary_algorithm import SecondaryAlgorithm as salg
-from .zensel.secondary.GetProxy import GetProxy as gpr
-from .zensel.secondary.ThreadNum import ThreadNum as thn
-from .log import *
+from .log import main_logger, custom_logger
+from .daemon_tasks import DaemonTasks as dt
 
 from app import app, database
 from app.forms import LinkQueueForm, NumberOfViewes, FilterForm, AllLinkViewes
 from app.models import LinkQueue, BrowsingHistory
 
+mlog = main_logger()
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -54,126 +52,47 @@ def views():
     all_links_form = AllLinkViewes()
     views_num_form = NumberOfViewes()
     queue_links = LinkQueue.query.all()
-    url_slices = lambda urls, count: [urls[i:i+count] for i in range(0, len(urls), count)]
+
+    for thr in enumerate():
+        if thr.name == 'daemonViewer':
+            daemon_viewer = True
+            break
+        else:
+            daemon_viewer = False
 
     if all_links_form.validate_on_submit():
-        thr_num = thn.how_many_threads(len(queue_links))
-        links = url_slices(queue_links, int(len(queue_links)/thr_num))
-        proxies = gpr.get_list()
+        clog = custom_logger(0, 'secondary_alg')
 
         try:
             before_urls_count = len(BrowsingHistory.query.all())
         except Exception as count_ex:
-            logging.exception(count_ex)
+            mlog.exception(count_ex)
             before_urls_count = 0
 
-        logging.info(f'---> BUC: {before_urls_count}')
+        thread = Thread(target=dt.daemon_func_salg, name=f'daemonViewer', args=(queue_links, before_urls_count, clog), daemon=True)
+        thread.start()
 
-        try:
-            thread_list = []
-            if proxies == None:
-                logging.info('No suitable proxy')
-            else:
-                for count in range(thr_num):
-                    thread = Thread(target=salg.read_article_withwhile, name=f'THREAD {count+1}', args=(count+1, links[count]))
-                    thread_list.append(thread)
-                    thread.start()
-                    start_time = time.time()
-                    logging.info(f'> THREAD {count+1} started')
-                    time.sleep(5)
+        return redirect(url_for('views'))
 
-                for thr in thread_list:
-                    thr.join()
-                    logging.info(f'> {thr.name} stopped - time: {time.time() - start_time}')
-
-            logging.info(f'COMPLETED WITH TIME: {time.time() - start_time}')
-
-            after_urls_count = len(BrowsingHistory.query.all())
-
-            logging.info(f'---> AUC: {after_urls_count}')
-            difference = after_urls_count - before_urls_count
-
-            if after_urls_count > before_urls_count:
-                for link in links:
-                    for l in link:
-                        l.views = l.views - 1
-                        if l.views <= 0:
-                            database.session.delete(l)
-                    database.session.commit()
-
-                flash(f'[INFO] Successfully completed. {difference} of {len(queue_links)}')
-                return redirect(url_for('views'))
-            else:
-                flash('[INFO] No suitable proxy or bad url, try again!')
-                return redirect(url_for('views'))
-
-        except Exception as ex:
-            logging.exception(ex)
-            flash('[ERROR] Viewer failed!')
-            return redirect(url_for('views'))
+    return render_template('views.html', all_links_form=all_links_form, views_num_form=views_num_form, queue_links=queue_links, daemon_viewer=daemon_viewer)
 
 
-    return render_template('views.html', all_links_form=all_links_form, views_num_form=views_num_form, queue_links=queue_links)
-
-
-@app.route('/views/<int:id>/start', methods=['GET', 'POST'])
+@app.route('/views/<int:id>/start', methods=['POST'])
 def start(id):
     views_num_form = NumberOfViewes()
+    clog = custom_logger(id, 'primary_alg')
     links = LinkQueue.query.filter_by(id=id)
 
     try:
         before_urls_count = len([item.ip for item in BrowsingHistory.query.filter_by(url=links[0].url)])
     except Exception as count_ex:
-        logging.exception(count_ex)
+        mlog.exception(count_ex)
         before_urls_count = 0
 
-    logging.info(f'---> BUC: {before_urls_count}')
+    thread = Thread(target=dt.daemon_func_alg, name=f'daemonViewer', args=(before_urls_count, views_num_form.num.data, links, clog), daemon=True)
+    thread.start()
 
-    thr_num = thn.how_many_threads(views_num_form.num.data)
-    views_num = int(views_num_form.num.data / thr_num)
-
-    proxies = gpr.get_list()
-    try:
-        thread_list = []
-        if proxies == None:
-            logging.info('No suitable proxy')
-        else:
-            for count in range(thr_num):
-                thread = Thread(target=alg.read_article_withwhile, name=f'THREAD {count+1}', args=(count+1, links, views_num))
-                thread_list.append(thread)
-                thread.start()
-                start_time = time.time()
-                logging.info(f'> THREAD {count+1} started')
-                time.sleep(5)
-
-            for thr in thread_list:
-                thr.join()
-                logging.info(f'> {thr.name} stopped - time: {time.time() - start_time}')
-
-        logging.info(f'COMPLETED WITH TIME: {time.time() - start_time}')
-
-        after_urls_count = len([item.ip for item in BrowsingHistory.query.filter_by(url=links[0].url)])
-
-        logging.info(f'---> AUC: {after_urls_count}')
-        difference = after_urls_count - before_urls_count
-
-        if after_urls_count > before_urls_count:
-            for l in links:
-                l.views = l.views - difference
-                if l.views <= 0:
-                    database.session.delete(l)
-            database.session.commit()
-
-            flash(f'[INFO] Successfully completed. {difference} of {views_num_form.num.data}')
-            return redirect(url_for('views'))
-        else:
-            flash('[INFO] No suitable proxy or bad url, try again!')
-            return redirect(url_for('views'))
-
-    except Exception as ex:
-        logging.exception(ex)
-        flash('[ERROR] Viewer failed!')
-        return redirect(url_for('views'))
+    return redirect(url_for('views'))
 
 
 @app.route('/database', methods=['GET', 'POST'])

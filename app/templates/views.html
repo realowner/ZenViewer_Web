@@ -16,6 +16,14 @@
         </div>
     </div>
 
+    <div style="margin-bottom: 30px;">
+        {% if daemon_viewer %}
+            <p style="color: red;">Внимание! Viewer запущен! Дождитесь окончания работы текущего чтобы запустить новый</p>
+        {% else %}
+            <p>Viewer не запущен.</p>
+        {% endif %}
+    </div>
+
     <div class="right-bar-content-form">
         {% for link in queue_links %}
             <hr>

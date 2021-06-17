@@ -1,5 +1,6 @@
 from selenium import webdriver
 from fake_useragent import UserAgent
+from config import basedir
 
 class Browser:
 
@@ -27,8 +28,9 @@ class Browser:
         browser = webdriver.Firefox(
             # executable_path="firefoxdriver\geckodriver.exe",
             # executable_path='firefoxdriver/geckodriver',
-            executable_path='app/zensel/firefoxdriver/geckodriver',
+            executable_path=f'{basedir}/app/zensel/firefoxdriver/geckodriver',
             options=options,
+            log_path=f'{basedir}/logs/geckodriver.log',
         )
         browser.set_window_size(1272, 774)
 

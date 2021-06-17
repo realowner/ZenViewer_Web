@@ -14,7 +14,7 @@ from .secondary.TimeToRead import TimeToRead as ttr
 
 class SecondaryAlgorithm:
 
-    def read_article_withwhile(number, links):
+    def read_article_withwhile(number, links, clog):
         total_views = 0
         cycle_counter = 0
         ip_list = []
@@ -31,7 +31,7 @@ class SecondaryAlgorithm:
                 cycle_counter += 1
 
                 if cycle_counter == 11:
-                    logging.info(f'[THREAD {number} - LINK {link.id}]   no suitable proxy, 60s sleep')
+                    clog.info(f'[THREAD {number} - LINK {link.id}]   no suitable proxy, 60s sleep')
                     cycle_counter = 0
                     ip_list = []
                     port_dict = {}
@@ -56,7 +56,7 @@ class SecondaryAlgorithm:
                         history_insert = BrowsingHistory(url=link.url, ip=ip)
                         database.session.add(history_insert)
                         database.session.commit()
-                        logging.info(f'[THREAD {number} - LINK {link.id}]   {ip}:{port} insert DONE')
+                        clog.info(f'[THREAD {number} - LINK {link.id}]   {ip}:{port} insert DONE')
 
                         browser = brw.my_browser(ip, port)
                         browser.set_page_load_timeout(30)
@@ -77,19 +77,19 @@ class SecondaryAlgorithm:
                                 like_button.click()
                                 time.sleep(20)
 
-                                logging.info(f'[THREAD {number} - LINK {link.id}]   ALG DETERMINE')
+                                clog.info(f'[THREAD {number} - LINK {link.id}]   ALG DETERMINE')
                             except:
                                 article_info = ttr.determine_except(div_height=div.size['height'], div_text=div.text)
                                 for scr_num in range(0, article_info['scrolls']):
                                     browser.execute_script(f"window.scrollBy(0,{article_info['scroll_down']})")
                                     time.sleep(article_info['time_to_scroll'])
-                                logging.info(f'[THREAD {number} - LINK {link.id}]   ALG DETERMINE EXCEPT')
+                                clog.info(f'[THREAD {number} - LINK {link.id}]   ALG DETERMINE EXCEPT')
                             
-                            logging.info(f'[THREAD {number} - LINK {link.id}]   proxy {ip}:{port} ...COMPLETED')
+                            clog.info(f'[THREAD {number} - LINK {link.id}]   proxy {ip}:{port} ...COMPLETED')
                             break
 
                         except:
-                            logging.info(f'[THREAD {number} - LINK {link.id}]   {ip}:{port} bad proxy')
+                            clog.info(f'[THREAD {number} - LINK {link.id}]   {ip}:{port} bad proxy')
                             database.session.delete(history_insert)
                             database.session.commit()
                         finally:
@@ -97,8 +97,8 @@ class SecondaryAlgorithm:
                             browser.quit()
 
                     except Exception as insert_ex:
-                        logging.exception(insert_ex)
-                        logging.info(f'[THREAD {number} - LINK {link.id}]   {ip}:{port} insert FAIL')
+                        clog.exception(insert_ex)
+                        clog.info(f'[THREAD {number} - LINK {link.id}]   {ip}:{port} insert FAIL')
  
                 else:
-                    logging.info(f'[THREAD {number} - LINK {link.id}]   link already viewed with {ip}:{port}')
+                    clog.info(f'[THREAD {number} - LINK {link.id}]   link already viewed with {ip}:{port}')
