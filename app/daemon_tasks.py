@@ -1,6 +1,6 @@
 import time
 from threading import Thread
-from app import database
+from app import database, socketio
 from app.models import BrowsingHistory
 from .zensel.algorithm import Algorithm as alg
 from .zensel.secondary_algorithm import SecondaryAlgorithm as salg
@@ -111,6 +111,7 @@ class DaemonTasks:
             # flash('[ERROR] Viewer failed!')
             # return redirect(url_for('views'))
 
+    # @socketio.on('message')
     def daemon_task_test(clog, id):
         for counter in range (3):
             clog.info(f'---> [DAEMON TEST TASK] Iteration {counter}')

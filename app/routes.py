@@ -1,9 +1,7 @@
-from os import link
 from flask.globals import request
 from flask.helpers import flash
 from flask import render_template, flash, redirect, url_for
 from threading import Thread, enumerate
-import time
 
 from .log import main_logger, custom_logger
 from .daemon_tasks import DaemonTasks as dt
@@ -75,6 +73,7 @@ def views():
             before_urls_count = 0
 
         thread = Thread(target=dt.daemon_func_salg, name=f'daemonViewer', args=(queue_links, before_urls_count, clog), daemon=True)
+        # thread = Thread(target=dt.daemon_task_test, name=f'daemonViewer', args=(clog, id), daemon=True)
         thread.start()
 
         return redirect(url_for('views'))
@@ -101,8 +100,7 @@ def start(id):
         mlog.exception(count_ex)
         before_urls_count = 0
 
-    # thread = Thread(target=dt.daemon_func_alg, name=f'daemonViewer', args=(before_urls_count, views_num_form.num.data, links, clog), daemon=True)
-    thread = Thread(target=dt.daemon_task_test, name=f'daemonViewer', args=(clog, id), daemon=True)
+    thread = Thread(target=dt.daemon_func_alg, name=f'daemonViewer', args=(before_urls_count, views_num_form.num.data, links, clog), daemon=True)
     thread.start()
 
     return redirect(url_for('views'))
