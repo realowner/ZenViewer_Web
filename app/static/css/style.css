@@ -353,3 +353,32 @@ h1, p{
     text-align: center;
     font-size: 12px;
 }
+
+.tablinks{
+    width: 292px;
+    border: 2px solid rgb(141, 0, 0);
+    background-color: rgb(141, 0, 0);
+    color: white;
+}
+.tabcontent{
+    display: none;
+    margin: 0;
+    padding: 15px;
+}
+.active {
+    display: block;
+}
+.tab-active {
+    background-color: white;
+    border: 2px solid rgb(141, 0, 0);
+    color: rgb(141, 0, 0);
+}
+
+.log-line {
+    font-size: 10pt;
+}
+
+.logs-btn {
+    display: flex;
+    justify-content: space-between;
+}

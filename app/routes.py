@@ -2,9 +2,11 @@ from flask.globals import request
 from flask.helpers import flash
 from flask import render_template, flash, redirect, url_for
 from threading import Thread, enumerate
+from datetime import date
 
 from .log import main_logger, custom_logger
 from .daemon_tasks import DaemonTasks as dt
+from config import basedir
 
 from app import app, database
 from app.forms import LinkQueueForm, NumberOfViewes, FilterForm, AllLinkViewes
@@ -121,4 +123,11 @@ def database_page():
 @app.route('/logs')
 def logs():
 
-    return render_template('logs.html')
+    today = date.today()
+    curr_date = today.strftime('%d_%m_%Y')
+
+    glob_log = open(f'{basedir}/logs/app.log', 'r')
+    prim_log = open(f'{basedir}/logs/viewer/primary_alg_{curr_date}.log', 'r')
+    secn_log = open(f'{basedir}/logs/viewer/secondary_alg_{curr_date}.log', 'r')
+
+    return render_template('logs.html', glob_log=glob_log, prim_log=prim_log, secn_log=secn_log)
