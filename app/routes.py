@@ -52,27 +52,19 @@ def views():
     views_num_form = NumberOfViewes()
     queue_links = LinkQueue.query.all()
 
-    trdz = enumerate()
-
     for thr in enumerate():
         if thr.name == 'daemonViewer':
             daemon_viewer = True
-            id_in_viewer = thr._args[1]
+            # id_in_viewer = thr._args[1]
             break
         else:
             daemon_viewer = False
-            id_in_viewer = None
+            # id_in_viewer = None
 
     if all_links_form.validate_on_submit():
         clog = custom_logger(0, 'secondary_alg')
 
-        try:
-            before_urls_count = len(BrowsingHistory.query.all())
-        except Exception as count_ex:
-            mlog.exception(count_ex)
-            before_urls_count = 0
-
-        thread = Thread(target=dt.daemon_func_salg, name=f'daemonViewer', args=(queue_links, before_urls_count, clog), daemon=True)
+        thread = Thread(target=dt.daemon_func_salg, name=f'daemonViewer', args=(clog,), daemon=True)
         # thread = Thread(target=dt.daemon_task_test, name=f'daemonViewer', args=(clog, id), daemon=True)
         thread.start()
 
@@ -84,7 +76,7 @@ def views():
         views_num_form=views_num_form, 
         queue_links=queue_links, 
         daemon_viewer=daemon_viewer, 
-        id_in_viewer=id_in_viewer
+        # id_in_viewer=id_in_viewer
     )
 
 
@@ -92,15 +84,8 @@ def views():
 def start(id):
     views_num_form = NumberOfViewes()
     clog = custom_logger(id, 'primary_alg')
-    links = LinkQueue.query.filter_by(id=id)
 
-    try:
-        before_urls_count = len([item.ip for item in BrowsingHistory.query.filter_by(url=links[0].url)])
-    except Exception as count_ex:
-        mlog.exception(count_ex)
-        before_urls_count = 0
-
-    thread = Thread(target=dt.daemon_func_alg, name=f'daemonViewer', args=(before_urls_count, views_num_form.num.data, links, clog), daemon=True)
+    thread = Thread(target=dt.daemon_func_alg, name=f'daemonViewer', args=(views_num_form.num.data, id, clog), daemon=True)
     thread.start()
 
     return redirect(url_for('views'))

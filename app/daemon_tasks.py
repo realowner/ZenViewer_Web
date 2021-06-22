@@ -1,7 +1,7 @@
 import time
 from threading import Thread
 from app import database
-from app.models import BrowsingHistory
+from app.models import BrowsingHistory, LinkQueue
 from .zensel.algorithm import Algorithm as alg
 from .zensel.secondary_algorithm import SecondaryAlgorithm as salg
 from .zensel.secondary.GetProxy import GetProxy as gpr
@@ -10,7 +10,14 @@ from .zensel.secondary.ThreadNum import ThreadNum as thn
 
 class DaemonTasks:
 
-    def daemon_func_alg(before_urls_count, views_num_form, links, clog):
+    def daemon_func_alg(views_num_form, id, clog):
+        links = LinkQueue.query.filter_by(id=id)
+        try:
+            before_urls_count = len([item.ip for item in BrowsingHistory.query.filter_by(url=links[0].url)])
+        except Exception as count_ex:
+            clog.exception(count_ex)
+            before_urls_count = 0
+
         clog.info(f'---> BUC: {before_urls_count}')
 
         thr_num = thn.how_many_threads(views_num_form)
@@ -57,12 +64,20 @@ class DaemonTasks:
             clog.info('[ERROR] Viewer failed!')
 
 
-    def daemon_func_salg(queue_links, before_urls_count, clog):
+    def daemon_func_salg(clog):
+        queue_links = LinkQueue.query.all()
         url_slices = lambda urls, count: [urls[i:i+count] for i in range(0, len(urls), count)]
 
         thr_num = thn.how_many_threads(len(queue_links))
         links = url_slices(queue_links, int(len(queue_links)/thr_num))
         proxies = gpr.get_list()
+        
+        try:
+            before_urls_count = len(BrowsingHistory.query.all())
+        except Exception as count_ex:
+            clog.exception(count_ex)
+            before_urls_count = 0
+
         clog.info(f'---> BUC: {before_urls_count}')
 
         try:
