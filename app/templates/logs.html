@@ -3,7 +3,35 @@
 {% block rightbar %}
 
     <div class="right-bar-content-head">
-        <h1>COMING SOON...</h1>
+        <h1>LOGS</h1>
+    </div>
+
+    <div class="logs-btn">
+        <button class="tablinks tab-active">Global</button>
+        <button class="tablinks">Primary</button>
+        <button class="tablinks">Secondary</button>
+    </div>
+
+    <div class="right-bar-content">
+
+        <div data-id="Global" class="tabcontent active">
+            {% for line in glob_log %}
+                <p class="log-line">{{ line }}</p>
+            {% endfor %}
+        </div>
+
+        <div data-id="Primary" class="tabcontent">
+            {% for line in prim_log %}
+                <p class="log-line">{{ line }}</p>
+            {% endfor %}
+        </div>
+
+        <div data-id="Secondary" class="tabcontent">
+            {% for line in secn_log %}
+                <p class="log-line">{{ line }}</p>
+            {% endfor %}
+        </div>
+
     </div>
 
 {% endblock %}
