@@ -127,7 +127,15 @@ def logs():
     curr_date = today.strftime('%d_%m_%Y')
 
     glob_log = open(f'{basedir}/logs/app.log', 'r')
-    prim_log = open(f'{basedir}/logs/viewer/primary_alg_{curr_date}.log', 'r')
-    secn_log = open(f'{basedir}/logs/viewer/secondary_alg_{curr_date}.log', 'r')
+    
+    try:
+        prim_log = open(f'{basedir}/logs/viewer/primary_alg_{curr_date}.log', 'r')
+    except:
+        prim_log = False
+
+    try:
+        secn_log = open(f'{basedir}/logs/viewer/secondary_alg_{curr_date}.log', 'r')
+    except:
+        secn_log = False
 
     return render_template('logs.html', glob_log=glob_log, prim_log=prim_log, secn_log=secn_log)

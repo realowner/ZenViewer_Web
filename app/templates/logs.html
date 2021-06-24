@@ -21,15 +21,23 @@
         </div>
 
         <div data-id="Primary" class="tabcontent">
-            {% for line in prim_log %}
-                <p class="log-line">{{ line }}</p>
-            {% endfor %}
+            {% if prim_log %}
+                {% for line in prim_log %}
+                    <p class="log-line">{{ line }}</p>
+                {% endfor %}
+            {% else %}
+                <p class="log-line">Первичный алгорим сегодня не был запущен.</p>
+            {% endif %}   
         </div>
 
         <div data-id="Secondary" class="tabcontent">
-            {% for line in secn_log %}
-                <p class="log-line">{{ line }}</p>
-            {% endfor %}
+            {% if secn_log %}
+                {% for line in secn_log %}
+                    <p class="log-line">{{ line }}</p>
+                {% endfor %}
+            {% else %}
+                <p class="log-line">Вторичный алгорим сегодня не был запущен.</p>
+            {% endif %}
         </div>
 
     </div>
