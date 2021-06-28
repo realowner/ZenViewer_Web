@@ -70,10 +70,17 @@ class Daemon:
 			pid = None
 	
 		if pid:
-			message = "pidfile {0} already exist. " + \
-					"Daemon already running?\n"
+			message = "pidfile {0} уже существует. " + \
+					"Сервис должен быть запущен.\n" + \
+					"Команда проверки: python3 zenviewer.py status\n"
 			sys.stderr.write(message.format(self.pidfile))
 			sys.exit(1)
+		else:
+			message = "Запущено на 127.0.0.1:3729\n" + \
+					"Команда перезапуска: python3 zenviewer.py restart\n" + \
+					"Команда остановки: python3 zenviewer.py stop\n" + \
+					"Команда проверки: python3 zenviewer.py status\n"
+			sys.stderr.write(message)
 		
 		# Start the daemon
 		self.daemonize()
@@ -90,8 +97,9 @@ class Daemon:
 			pid = None
 	
 		if not pid:
-			message = "pidfile {0} does not exist. " + \
-					"Daemon not running?\n"
+			message = "pidfile {0} не найден. " + \
+					"Сервис не запущен.\n" + \
+					"Команда проверки: python3 zenviewer.py status\n"
 			sys.stderr.write(message.format(self.pidfile))
 			return # not an error in a restart
 
@@ -100,6 +108,7 @@ class Daemon:
 			while 1:
 				os.kill(pid, signal.SIGTERM)
 				time.sleep(0.1)
+				sys.stderr.write("Сервис остановлен.\n")
 		except OSError as err:
 			e = str(err.args)
 			if e.find("No such process") > 0:
