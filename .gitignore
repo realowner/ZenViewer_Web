@@ -6,3 +6,4 @@ app.log
 /logs/viewer/*
 !/logs/.gitkeep
 !/logs/viewer/.gitkeep
+database.db
