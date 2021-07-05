@@ -4,10 +4,11 @@ from app import database
 class LinkQueue(database.Model):
     id = database.Column(database.Integer, primary_key=True)
     url = database.Column(database.Text, nullable=False)
+    service = database.Column(database.String(15), nullable=False)
     views = database.Column(database.Integer, nullable=True)
 
     def __rerp__(self):
-        return f'{self.url} > {self.views} views left'
+        return f'{self.url} > {self.views} views/likes left'
 
 
 class BrowsingHistory(database.Model):

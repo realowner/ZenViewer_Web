@@ -133,8 +133,15 @@ h1, p{
 }
 
 .rbc-info{
+    display: flex;
+    align-items: center;
     width: 650px; 
     font-size: 14px;
+}
+
+.views-logo {
+    width: 40px;
+    margin-right: 10px;
 }
 
 .rbc-num-field{
@@ -202,15 +209,23 @@ h1, p{
 }
 
 .queue-url-field{
-    width: 600px;
-    height: 25px;
+    width: 500px;
+    height: 21px;
     border: 1px solid black;
     border-radius: 5px;
     background-color: white;
 }
 
 .queue-views-field{
-    width: 60px;
+    width: 50px;
+    height: 21px;
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: white;
+}
+
+.queue-service-field {
+    width: 80px;
     height: 25px;
     border: 1px solid black;
     border-radius: 5px;
@@ -218,8 +233,8 @@ h1, p{
 }
 
 .queue-btn{
-    height: 29px;
-    width: 100px;
+    height: 25px;
+    width: 50px;
     border: none;
     border-radius: 5px;
     background-color: rgb(141, 0, 0);
@@ -262,6 +277,7 @@ h1, p{
 .right-bar-content-links{
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .filter-form{
@@ -355,7 +371,7 @@ h1, p{
 }
 
 .tablinks{
-    width: 292px;
+    width: 218px;
     border: 2px solid rgb(141, 0, 0);
     background-color: rgb(141, 0, 0);
     color: white;

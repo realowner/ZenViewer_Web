@@ -12,7 +12,12 @@ from app import app, database
 from app.forms import LinkQueueForm, NumberOfViewes, FilterForm, AllLinkViewes
 from app.models import LinkQueue, BrowsingHistory
 
+from .zensel.algorithm import Algorithm
+
 mlog = main_logger()
+slog = custom_logger('secondary_alg')
+plog = custom_logger('primary_alg')
+blog = custom_logger('behance_alg')
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -25,7 +30,7 @@ def queue():
     queue_links = LinkQueue.query.all()
 
     if queue_form.validate_on_submit():
-        link = LinkQueue(url=queue_form.url_for_queue.data, views=queue_form.views.data)
+        link = LinkQueue(url=queue_form.url_for_queue.data, service=queue_form.service.data, views=queue_form.views.data)
         database.session.add(link)
         database.session.commit()
         flash('[INFO] Successfully added!')
@@ -57,16 +62,12 @@ def views():
     for thr in enumerate():
         if thr.name == 'daemonViewer':
             daemon_viewer = True
-            # id_in_viewer = thr._args[1]
             break
         else:
             daemon_viewer = False
-            # id_in_viewer = None
 
     if all_links_form.validate_on_submit():
-        clog = custom_logger(0, 'secondary_alg')
-
-        thread = Thread(target=dt.daemon_func_salg, name=f'daemonViewer', args=(clog,), daemon=True)
+        thread = Thread(target=dt.daemon_func_salg, name=f'daemonViewer', args=(slog,), daemon=True)
         # thread = Thread(target=dt.daemon_task_test, name=f'daemonViewer', args=(clog, id), daemon=True)
         thread.start()
 
@@ -84,11 +85,15 @@ def views():
 
 @app.route('/views/<int:id>/start', methods=['POST'])
 def start(id):
+    target_link = LinkQueue.query.get(id)
     views_num_form = NumberOfViewes()
-    clog = custom_logger(id, 'primary_alg')
 
-    thread = Thread(target=dt.daemon_func_alg, name=f'daemonViewer', args=(views_num_form.num.data, id, clog), daemon=True)
-    thread.start()
+    if target_link.service == 'Zen':
+        thread = Thread(target=dt.daemon_func_alg, name='daemonViewer', args=(views_num_form.num.data, id, plog), daemon=True)
+        thread.start()
+    elif target_link.service == 'Behance':
+        thread = Thread(target=dt.daemon_func_behance, name='daemonViewer', args=(views_num_form.num.data, id, blog), daemon=True)
+        thread.start()
 
     return redirect(url_for('views'))
 
@@ -138,4 +143,9 @@ def logs():
     except:
         secn_log = False
 
-    return render_template('logs.html', glob_log=glob_log, prim_log=prim_log, secn_log=secn_log)
+    try:
+        beh_log = open(f'{basedir}/logs/viewer/behance_alg_{curr_date}.log', 'r')
+    except:
+        beh_log = False
+
+    return render_template('logs.html', glob_log=glob_log, prim_log=prim_log, secn_log=secn_log, beh_log=beh_log)

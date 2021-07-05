@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import IntegerField, TextField, SubmitField
+from wtforms.fields.core import SelectField
 from wtforms.validators import DataRequired, ValidationError
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from app.models import LinkQueue, BrowsingHistory
@@ -8,7 +9,8 @@ from app.models import LinkQueue, BrowsingHistory
 class LinkQueueForm(FlaskForm):
     url_for_queue = TextField('Url:', validators=[DataRequired()])
     views = IntegerField('Views:', validators=[DataRequired()])
-    submit_link = SubmitField('Add to queue')
+    service = SelectField('Service:', validators=[DataRequired()], choices=[('Zen', 'Zen'), ('Behance', 'Behance')])
+    submit_link = SubmitField('Add')
 
     def validate_url_for_queue(self, url_for_queue):
         url_from_db = LinkQueue.query.filter_by(url=url_for_queue.data).first()

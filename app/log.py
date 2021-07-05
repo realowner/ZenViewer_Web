@@ -13,11 +13,11 @@ def main_logger():
 
     return mlogger
 
-def custom_logger(id, alg_name):
+def custom_logger(alg_name):
     today = date.today()
     curr_date = today.strftime('%d_%m_%Y')
 
-    clogger = logging.getLogger(f'thread_id_{id}')
+    clogger = logging.getLogger(f'{alg_name}')
     clogger.setLevel(logging.INFO)
     file_handler = logging.FileHandler(f'{basedir}/logs/viewer/{alg_name}_{curr_date}.log', mode='a')
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')

@@ -4,7 +4,7 @@ import re
 
 class TimeToRead:
 
-    def determine(str_time, div_height):
+    def determine(str_time, div_height, win_height):
 
         num_in_str = ''
         num_without_str = re.findall(r'\d+', str_time)
@@ -22,7 +22,8 @@ class TimeToRead:
             thread_num = total_num
 
         article_height = div_height + 500.0
-        scroll_down = 700.0/2
+        # scroll_down = 700.0/2
+        scroll_down = float(win_height)/2
         scrolls = math.ceil(article_height/scroll_down)
         time_to_scroll = thread_num/scrolls
 
@@ -36,12 +37,13 @@ class TimeToRead:
 
         return result
 
-    def determine_except(div_height, div_text):
+    def determine_except(div_height, div_text, win_height):
 
         article_text = div_text
         num_to_multiply = math.ceil(len(article_text) / 1500)
         article_height = div_height
-        scroll_down = 700.0/2
+        # scroll_down = 700.0/2
+        scroll_down = float(win_height)/2
         scrolls = math.ceil(article_height/scroll_down)
         
         total_time = 60 * num_to_multiply
@@ -55,6 +57,18 @@ class TimeToRead:
             'time_to_scroll': time_to_scroll,
             'total_time': total_time,
             'num_to_multiply': num_to_multiply
+        }
+
+        return result
+
+    def for_behance(div_height, win_height):
+        
+        scroll_down = int(win_height/2)
+        scrolls = math.ceil(div_height)/scroll_down
+
+        result = {
+            'scroll_down': scroll_down,
+            'scrolls': math.ceil(scrolls),
         }
 
         return result
