@@ -27,7 +27,7 @@ class DaemonTasks:
         try:
             thread_list = []
             if proxies == None:
-                clog.warning('No suitable proxy')
+                clog.warning('Failed to get proxy!')
             else:
                 for count in range(thr_num):
                     thread = Thread(target=alg.read_article_withwhile_primary, name=f'THREAD {count+1}', args=(count+1, links, views_num, proxies, clog))
@@ -84,7 +84,7 @@ class DaemonTasks:
         try:
             thread_list = []
             if proxies == None:
-                clog.warning('No suitable proxy')
+                clog.warning('Failed to get proxy!')
             else:
                 for count in range(thr_num):
                     thread = Thread(target=alg.read_article_withwhile_secondary, name=f'THREAD {count+1}', args=(count+1, links[count], proxies, clog))
@@ -140,7 +140,7 @@ class DaemonTasks:
         try:
             thread_list = []
             if proxies == None:
-                clog.warning('No suitable proxy')
+                clog.warning('Failed to get proxy!')
             else:
                 for count in range(thr_num):
                     thread = Thread(target=alg.behance_alg, name=f'THREAD {count+1}', args=(count+1, links, views_num, proxies, clog))
@@ -163,7 +163,7 @@ class DaemonTasks:
 
             if after_urls_count > before_urls_count:
                 for l in links:
-                    l.views = l.views - difference
+                    # l.views = l.views - difference
                     if l.views <= 0:
                         database.session.delete(l)
                 database.session.commit()

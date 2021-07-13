@@ -263,6 +263,9 @@ class Algorithm:
                                             like.click()
                                             clog.info(f'[THREAD {number} - LINK {link.id}]      like DONE')
                                             total_views += 1
+                                            link.views = link.views - 1
+                                            database.session.commit()
+                                            clog.info(f'[THREAD {number} - LINK {link.id}]      db commit DONE')
                                             time.sleep(5)
                                         except:
                                             clog.error(f'[THREAD {number} - LINK {link.id}]     like btn error!')
