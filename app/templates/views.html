@@ -6,23 +6,27 @@
         <h1>VIEWS<h1>
     </div>
 
-    <div class="right-bar-content-secform">
-        <div class="secform-block">
-            <p style="font-size: 18px;">View all links in the queue (one viewing on the first suitable ip)</p>
-            <form method="post">
-                {{ all_links_form.hidden_tag() }}
-                {% if daemon_viewer %}
-                    {{ all_links_form.submit_all(class_='all-views-btn-dis', disabled=True) }}
-                {% else %}
-                    {{ all_links_form.submit_all(class_='all-views-btn') }}
-                {% endif %}
-            </form>
+    {% if sec_alg_sett %}
+        <div class="right-bar-content-secform">
+            <div class="secform-block">
+                <p style="font-size: 18px;">View all links in the queue (one viewing on the first suitable ip)</p>
+                <form method="post">
+                    {{ all_links_form.hidden_tag() }}
+                    {% if daemon_viewer %}
+                        {{ all_links_form.submit_all(class_='all-views-btn-dis', disabled=True) }}
+                    {% else %}
+                        {{ all_links_form.submit_all(class_='all-views-btn') }}
+                    {% endif %}
+                </form>
+            </div>
         </div>
-    </div>
+    {% else %}
+
+    {% endif %}
 
     <div style="margin-bottom: 30px;">
         {% if daemon_viewer %}
-            <p style="color: red;">Внимание! Viewer запущен! Дождитесь окончания работы текущего чтобы запустить новый</p>
+            <p style="color: red;">Внимание! Viewer запущен! Дождитесь окончания работы текущего чтобы запустить новый. Просмотрено {{ views_done }}/{{ views_need }} раз</p>
         {% else %}
             <p>Viewer не запущен.</p>
         {% endif %}

@@ -50,10 +50,9 @@ class DaemonTasks:
 
             if after_urls_count > before_urls_count:
                 for l in links:
-                    l.views = l.views - difference
                     if l.views <= 0:
                         database.session.delete(l)
-                database.session.commit()
+                        database.session.commit()
                 
                 clog.info(f'[INFO] Successfully completed. {difference} of {views_num_form}')
             else:
@@ -163,10 +162,10 @@ class DaemonTasks:
 
             if after_urls_count > before_urls_count:
                 for l in links:
-                    # l.views = l.views - difference
                     if l.views <= 0:
                         database.session.delete(l)
-                database.session.commit()
+                        database.session.commit()
+                        clog.info(f'[INFO] Link deleted.')
                 
                 clog.info(f'[INFO] Successfully completed. {difference} of {views_num_form}')
             else:

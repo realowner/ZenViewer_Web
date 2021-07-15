@@ -9,10 +9,9 @@ from .daemon_tasks import DaemonTasks as dt
 from config import basedir
 
 from app import app, database
-from app.forms import LinkQueueForm, NumberOfViewes, FilterForm, AllLinkViewes
-from app.models import LinkQueue, BrowsingHistory
+from app.forms import LinkQueueForm, NumberOfViewes, FilterForm, AllLinkViewes, SettingsForm
+from app.models import LinkQueue, BrowsingHistory, CurrentViewer, Settings
 
-from .zensel.algorithm import Algorithm
 
 mlog = main_logger()
 slog = custom_logger('secondary_alg')
@@ -58,17 +57,21 @@ def views():
     all_links_form = AllLinkViewes()
     views_num_form = NumberOfViewes()
     queue_links = LinkQueue.query.all()
+    global_settings = Settings.query.get(1)
 
     for thr in enumerate():
         if thr.name == 'daemonViewer':
             daemon_viewer = True
+            db_viewer_curr = CurrentViewer.query.get(1).curr_views
+            db_viewer_need = CurrentViewer.query.get(1).need_views
             break
         else:
             daemon_viewer = False
+            db_viewer_curr = 0
+            db_viewer_need = 0
 
     if all_links_form.validate_on_submit():
         thread = Thread(target=dt.daemon_func_salg, name=f'daemonViewer', args=(slog,), daemon=True)
-        # thread = Thread(target=dt.daemon_task_test, name=f'daemonViewer', args=(clog, id), daemon=True)
         thread.start()
 
         return redirect(url_for('views'))
@@ -77,9 +80,11 @@ def views():
         'views.html', 
         all_links_form=all_links_form, 
         views_num_form=views_num_form, 
-        queue_links=queue_links, 
-        daemon_viewer=daemon_viewer, 
-        # id_in_viewer=id_in_viewer
+        queue_links=queue_links,
+        daemon_viewer=daemon_viewer,
+        views_done=db_viewer_curr,
+        views_need=db_viewer_need,
+        sec_alg_sett = global_settings.sec_alg,
     )
 
 
@@ -87,6 +92,11 @@ def views():
 def start(id):
     target_link = LinkQueue.query.get(id)
     views_num_form = NumberOfViewes()
+
+    db_viewer = CurrentViewer.query.get(1)
+    db_viewer.curr_views = 0
+    db_viewer.need_views = views_num_form.num.data
+    database.session.commit()
 
     if target_link.service == 'Zen':
         thread = Thread(target=dt.daemon_func_alg, name='daemonViewer', args=(views_num_form.num.data, id, plog), daemon=True)
@@ -149,3 +159,22 @@ def logs():
         beh_log = False
 
     return render_template('logs.html', glob_log=glob_log, prim_log=prim_log, secn_log=secn_log, beh_log=beh_log)
+
+
+@app.route('/settings', methods=['GET', 'POST'])
+def settings():
+    global_settings = Settings.query.get(1)
+    settings_form = SettingsForm(thr_num=global_settings.thr_num, sec_alg=global_settings.sec_alg)
+
+    if settings_form.validate_on_submit():
+        try:
+            global_settings.thr_num = settings_form.thr_num.data
+            global_settings.sec_alg = settings_form.sec_alg.data
+            database.session.commit()
+            flash('Saved!')
+        except:
+            flash('Error!')
+
+        return redirect(url_for('settings'))
+    
+    return render_template('settings.html', settings_form=settings_form, global_settings=global_settings)

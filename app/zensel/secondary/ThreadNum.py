@@ -1,10 +1,13 @@
+from app.models import Settings
 
 
 class ThreadNum:
 
     def how_many_threads(views_num):
+
+        max_thr = Settings.query.get(1).thr_num
         
-        figs = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+        figs = [i for i in range(1, max_thr+1)]
 
         for fig in figs:
             res = views_num % fig

@@ -1,9 +1,22 @@
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, TextField, SubmitField
+from sqlalchemy.orm import defaultload
+from wtforms import IntegerField, TextField, SubmitField, BooleanField
 from wtforms.fields.core import SelectField
 from wtforms.validators import DataRequired, ValidationError
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
-from app.models import LinkQueue, BrowsingHistory
+from app.models import LinkQueue
+
+
+class SettingsForm(FlaskForm):
+    thr_num = IntegerField('Threads quantity:', validators=[DataRequired()])
+    sec_alg = BooleanField('Secondary algorithm')
+    submit_all = SubmitField('Save')
+
+    def validate_thr_num(self, thr_num):
+        if type(thr_num.data) is not int:
+            raise ValidationError('Must be int')
+        if thr_num.data <= 0:
+            raise ValidationError('Num not valid.')
 
 
 class LinkQueueForm(FlaskForm):
@@ -21,13 +34,12 @@ class LinkQueueForm(FlaskForm):
 
     def validate_views(self, views):
         if type(views.data) is not int:
-            raise ValidationError('Not int')
+            raise ValidationError('Must be int')
         if views.data <= 0:
             raise ValidationError('Num not valid.')
 
 
 class NumberOfViewes(FlaskForm):
-    # url_for_viewer = TextField('Url:', validators=[DataRequired()])
     num = IntegerField('Views:', validators=[DataRequired()])
     submit_view = SubmitField('Start')
 
@@ -38,6 +50,5 @@ class AllLinkViewes(FlaskForm):
 
 class FilterForm(FlaskForm):
     curr_url = QuerySelectField('Url', query_factory=lambda: LinkQueue.query.all(), get_label='url')
-    # curr_url = QuerySelectField('Url', query_factory=lambda: BrowsingHistory.query.all(), get_label='url')
     submit_filter = SubmitField('Search')
     submit_delete = SubmitField('Delete')

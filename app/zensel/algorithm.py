@@ -2,7 +2,7 @@ from itertools import cycle
 
 import time
 
-from app.models import BrowsingHistory
+from app.models import BrowsingHistory, CurrentViewer
 from app import database
 
 from .browser import Browser as brw
@@ -13,11 +13,12 @@ from .secondary.TimeToRead import TimeToRead as ttr
 class Algorithm:
 
     def read_article_withwhile_primary(number, links, views_num, prxs, clog):
+        db_viewer = CurrentViewer.query.get(1)
+
         total_views = 0
         cycle_counter = 0
         ip_list = []
         port_dict = {}
-        # proxies = gpr.get_list()
         for prx in prxs:
             ip_list.append(prx['host'])
             port_dict.update({prx["host"]: prx["port"]})
@@ -86,6 +87,18 @@ class Algorithm:
                                 clog.info(f'[THREAD {number} - LINK {link.id}]   ALG DETERMINE EXCEPT')
                             
                             total_views += 1
+                            try:
+                                link.views = link.views - 1
+                                current_link_session = database.session.object_session(link)
+                                current_link_session.commit()
+
+                                db_viewer.curr_views += 1
+                                database.session.commit()
+
+                                clog.info(f'[THREAD {number} - LINK {link.id}]      db commit DONE')
+                            except Exception as exc:
+                                clog.info(f'[THREAD {number} - LINK {link.id}]      db commit FAIL | {exc}')
+                                
                             clog.info(f'[THREAD {number} - LINK {link.id}]   proxy {ip}:{port} ...{total_views} of {views_num} views DONE')
 
                         except:
@@ -109,7 +122,6 @@ class Algorithm:
         cycle_counter = 0
         ip_list = []
         port_dict = {}
-        # proxies = gpr.get_list()
         for prx in prxs:
             ip_list.append(prx['host'])
             port_dict.update({prx["host"]: prx["port"]})
@@ -197,6 +209,8 @@ class Algorithm:
 
     
     def behance_alg(number, links, views_num, prxs, clog):
+        db_viewer = CurrentViewer.query.get(1)
+
         total_views = 0
         cycle_counter = 0
         ip_list = []
@@ -244,11 +258,11 @@ class Algorithm:
                             window_height = winsize["height"]
                             browser.set_page_load_timeout(60)
                             try:
+                                clog.info(f'[THREAD {number} - LINK {link.id}]   browser init DONE')
                                 browser.get(link.url)
-                                clog.info(f'[THREAD {number} - LINK {link.id}]      Link loaded')
                                 time.sleep(20)
-
                                 try:
+                                    clog.info(f'[THREAD {number} - LINK {link.id}]      Link loaded')
                                     work = browser.find_element_by_id("project-modules")
                                     work_height =  work.rect['height']
                                     work_info = ttr.for_behance(work_height, window_height)
@@ -263,9 +277,17 @@ class Algorithm:
                                             like.click()
                                             clog.info(f'[THREAD {number} - LINK {link.id}]      like DONE')
                                             total_views += 1
-                                            link.views = link.views - 1
-                                            database.session.commit()
-                                            clog.info(f'[THREAD {number} - LINK {link.id}]      db commit DONE')
+                                            try:
+                                                link.views = link.views - 1
+                                                current_link_session = database.session.object_session(link)
+                                                current_link_session.commit()
+
+                                                db_viewer.curr_views += 1
+                                                database.session.commit()
+
+                                                clog.info(f'[THREAD {number} - LINK {link.id}]      db commit DONE')
+                                            except Exception as exc:
+                                                clog.info(f'[THREAD {number} - LINK {link.id}]      db commit FAIL | {exc}')
                                             time.sleep(5)
                                         except:
                                             clog.error(f'[THREAD {number} - LINK {link.id}]     like btn error!')
@@ -273,11 +295,14 @@ class Algorithm:
                                         clog.error(f'[THREAD {number} - LINK {link.id}]     scrolls error!')
                                 except:
                                     clog.error(f'[THREAD {number} - LINK {link.id}]     work block not found!')
-
+                                    database.session.delete(history_insert)
+                                    database.session.commit()
+                                    clog.warning(f'[THREAD {number} - LINK {link.id}]   history insert deleted')
                             except:
                                 clog.warning(f'[THREAD {number} - LINK {link.id}]   {ip}:{port} bad proxy')
                                 database.session.delete(history_insert)
                                 database.session.commit()
+                                clog.warning(f'[THREAD {number} - LINK {link.id}]   history insert deleted')
                             finally:
                                 browser.close()
                                 browser.quit()

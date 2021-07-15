@@ -398,3 +398,36 @@ h1, p{
     display: flex;
     justify-content: space-between;
 }
+
+.sett-item {
+    margin-bottom: 20px;
+}
+
+.sett-item-error {
+    display: flex;
+}
+
+.sett-thr {
+    width: 30px;
+}
+
+.sett-desc {
+    font-size: 10pt;
+    color: rgb(114, 114, 114);
+}
+
+.sett-save {
+    height: 29px;
+    width: 65px;
+    border: none;
+    border-radius: 5px;
+    background-color: rgb(141, 0, 0);
+    color: white;
+}
+
+.sett-save:hover{
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: white;
+    color: black;
+}
