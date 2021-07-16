@@ -9,7 +9,7 @@ class ThreadNum:
         
         figs = [i for i in range(1, max_thr+1)]
 
-        for fig in figs:
+        for fig in reversed(figs):
             res = views_num % fig
 
             if res == 0:
