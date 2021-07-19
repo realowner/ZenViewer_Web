@@ -10,6 +10,7 @@
         <button class="tablinks tab-active">Global</button>
         <button class="tablinks">Primary</button>
         <button class="tablinks">Secondary</button>
+        <button class="tablinks">Behance</button>
     </div>
 
     <div class="right-bar-content">
@@ -37,6 +38,16 @@
                 {% endfor %}
             {% else %}
                 <p class="log-line">Вторичный алгорим сегодня не был запущен.</p>
+            {% endif %}
+        </div>
+
+        <div data-id="Behance" class="tabcontent">
+            {% if beh_log %}
+                {% for line in beh_log %}
+                    <p class="log-line">{{ line }}</p>
+                {% endfor %}
+            {% else %}
+                <p class="log-line">Behance алгорим сегодня не был запущен.</p>
             {% endif %}
         </div>
 

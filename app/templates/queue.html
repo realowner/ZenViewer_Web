@@ -27,6 +27,15 @@
                     {% endfor %}
                 </div>
             </div>
+            <div>
+                {{ queue_form.service.label }}
+                {{ queue_form.service(class_='queue-service-field') }}
+                <div>
+                    {% for error in queue_form.service.errors %}
+                        <span style="color: red; font-size: 10pt;">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            </div>
             {{ queue_form.submit_link(class_='queue-btn') }}
         </form>
     </div>
@@ -36,12 +45,14 @@
             <tr>
                 <td>ID</td>
                 <td>Ссилка на статью</td>
-                <td>Осталось просмотров</td>
+                <td>Сервис</td>
+                <td>Осталось просмотров/лайков</td>
             </tr>
             {% for link in queue_links %}
                 <tr>
                     <td>{{ link.id }}</td>
                     <td style="text-align: left;"><a href="{{ link.url }}">{{ link.url }}</a></td>
+                    <td>{{ link.service }}</td>
                     <td>{{ link.views }}</td>
                     <td style="border: none;"><a href="/queue/{{ link.id }}/delete" class="queue-table-delete-btn"><i class="fa fa-trash"></i></a></td>
                 </tr>

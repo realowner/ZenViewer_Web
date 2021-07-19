@@ -2,6 +2,9 @@ from selenium import webdriver
 from fake_useragent import UserAgent
 from config import basedir
 
+from .secondary.WindowSize import WindowSize
+
+
 class Browser:
 
     def my_browser(ip=None, port=None):
@@ -28,10 +31,12 @@ class Browser:
         browser = webdriver.Firefox(
             # executable_path="firefoxdriver\geckodriver.exe",
             # executable_path='firefoxdriver/geckodriver',
-            executable_path=f'{basedir}/app/zensel/firefoxdriver/geckodriver',
+            executable_path=f'{basedir}/app/parts/firefoxdriver/geckodriver',
             options=options,
             log_path=f'{basedir}/logs/geckodriver.log',
         )
-        browser.set_window_size(1272, 774)
+
+        window_size = WindowSize.get_size()
+        browser.set_window_size(window_size['width'], window_size['height'])
 
         return browser

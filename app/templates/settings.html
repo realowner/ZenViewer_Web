@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block rightbar %}
+
+    <div class="right-bar-content-head">
+        <h1>SETTINGS<h1>
+    </div>
+
+    <div>
+        <form method="post" class="settings-form">
+            {{ settings_form.hidden_tag() }}
+
+            <div class="sett-item">
+                <div class="sett-item-error">
+                    <div>
+                        {{ settings_form.thr_num.label }}
+                        {{ settings_form.thr_num(class_='sett-thr') }}
+                    </div>
+                    <div style="margin-left: 10px;">
+                        {% for error in settings_form.thr_num.errors %}
+                            <span style="color: red; font-size: 10pt;">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="sett-desc">
+                    <p>Максимальное количесво потоков при разделении просмотров. ВНИМАНИЕ! Большое кол-во может сильно загрузить систему.</p>
+                </div>
+            </div>
+            
+            <div class="sett-item">
+                {{ settings_form.sec_alg.label }}
+                {{ settings_form.sec_alg(class_='') }}
+                <div class="sett-desc">
+                    <p>Возможность запускать вторичный алгоритм. ВНИМАНИЕ! Алгоритм давно не обновлялся и может вызвать ошибки.</p>
+                </div>
+            </div>
+            
+            <div class="">
+                {{ settings_form.submit_all(class_='sett-save') }}
+            </div>
+        </form>
+    </div>
+    
+{% endblock %}
