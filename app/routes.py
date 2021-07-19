@@ -98,12 +98,8 @@ def start(id):
     db_viewer.need_views = views_num_form.num.data
     database.session.commit()
 
-    if target_link.service == 'Zen':
-        thread = Thread(target=dt.daemon_func_alg, name='daemonViewer', args=(views_num_form.num.data, id, plog), daemon=True)
-        thread.start()
-    elif target_link.service == 'Behance':
-        thread = Thread(target=dt.daemon_func_behance, name='daemonViewer', args=(views_num_form.num.data, id, blog), daemon=True)
-        thread.start()
+    thread = Thread(target=dt.daemon_func_alg, name='daemonViewer', args=(views_num_form.num.data, id, target_link.service, plog, blog), daemon=True)
+    thread.start()
 
     return redirect(url_for('views'))
 

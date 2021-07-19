@@ -2,14 +2,19 @@ import time
 from threading import Thread
 from app import database
 from app.models import BrowsingHistory, LinkQueue
-from .zensel.algorithm import Algorithm as alg
-from .zensel.secondary.GetProxy import GetProxy as gpr
-from .zensel.secondary.ThreadNum import ThreadNum as thn
+from .parts.algorithm import Algorithm as alg
+from .parts.secondary.GetProxy import GetProxy as gpr
+from .parts.secondary.ThreadNum import ThreadNum as thn
 
 
 class DaemonTasks:
 
-    def daemon_func_alg(views_num_form, id, clog):
+    def daemon_func_alg(views_num_form, id, target_service, pr_log, bh_log):
+        if target_service == 'Zen':
+            clog = pr_log
+        elif target_service == 'Behance':
+            clog = bh_log
+
         links = LinkQueue.query.filter_by(id=id)
         try:
             before_urls_count = len([item.ip for item in BrowsingHistory.query.filter_by(url=links[0].url)])
@@ -30,7 +35,12 @@ class DaemonTasks:
                 clog.warning('Failed to get proxy!')
             else:
                 for count in range(thr_num):
-                    thread = Thread(target=alg.read_article_withwhile_primary, name=f'THREAD {count+1}', args=(count+1, links, views_num, proxies, clog))
+
+                    if target_service == 'Zen':
+                        thread = Thread(target=alg.read_article_withwhile_primary, name=f'THREAD {count+1}', args=(count+1, links, views_num, proxies, clog))
+                    elif target_service == 'Behance':
+                        thread = Thread(target=alg.behance_alg, name=f'THREAD {count+1}', args=(count+1, links, views_num, proxies, clog))
+
                     thread_list.append(thread)
                     thread.start()
                     start_time = time.time()
@@ -113,61 +123,6 @@ class DaemonTasks:
                     database.session.commit()
 
                 clog.info(f'[INFO] Successfully completed. {difference} of {len(queue_links)}')
-            else:
-                clog.error('[INFO] No suitable proxy or bad url, try again!')
-
-        except Exception as ex:
-            clog.exception(ex)
-            clog.error('[ERROR] Viewer failed!')
-
-
-    def daemon_func_behance(views_num_form, id, clog):
-        links = LinkQueue.query.filter_by(id=id)
-        try:
-            before_urls_count = len([item.ip for item in BrowsingHistory.query.filter_by(url=links[0].url)])
-        except Exception as count_ex:
-            clog.exception(count_ex)
-            before_urls_count = 0
-
-        clog.info('=========================================================================')
-        clog.info(f'---> BUC: {before_urls_count}')
-
-        thr_num = thn.how_many_threads(views_num_form)
-        views_num = int(views_num_form / thr_num)
-
-        proxies = gpr.get_list()
-        try:
-            thread_list = []
-            if proxies == None:
-                clog.warning('Failed to get proxy!')
-            else:
-                for count in range(thr_num):
-                    thread = Thread(target=alg.behance_alg, name=f'THREAD {count+1}', args=(count+1, links, views_num, proxies, clog))
-                    thread_list.append(thread)
-                    thread.start()
-                    start_time = time.time()
-                    clog.info(f'> THREAD {count+1} started')
-                    time.sleep(5)
-
-                for thr in thread_list:
-                    thr.join()
-                    clog.info(f'> {thr.name} stopped - time: {time.time() - start_time}')
-
-            clog.info(f'COMPLETED WITH TIME: {time.time() - start_time}')
-
-            after_urls_count = len([item.ip for item in BrowsingHistory.query.filter_by(url=links[0].url)])
-
-            clog.info(f'---> AUC: {after_urls_count}')
-            difference = after_urls_count - before_urls_count
-
-            if after_urls_count > before_urls_count:
-                for l in links:
-                    if l.views <= 0:
-                        database.session.delete(l)
-                        database.session.commit()
-                        clog.info(f'[INFO] Link deleted.')
-                
-                clog.info(f'[INFO] Successfully completed. {difference} of {views_num_form}')
             else:
                 clog.error('[INFO] No suitable proxy or bad url, try again!')
 

@@ -4,7 +4,6 @@ import time
 
 from app.models import BrowsingHistory, CurrentViewer
 from app import database
-
 from .browser import Browser as brw
 from .secondary.GetProxy import GetProxy as gpr
 from .secondary.TimeToRead import TimeToRead as ttr
@@ -35,6 +34,7 @@ class Algorithm:
                     ip_list = []
                     port_dict = {}
                     time.sleep(60)
+                    clog.info(f'[THREAD {number} - LINK {link.id}]   alg awakening...')
                     proxies = gpr.get_list()
                     for prx in proxies:
                         ip_list.append(prx['host'])
@@ -62,21 +62,25 @@ class Algorithm:
                         window_height = winsize["height"]
                         browser.set_page_load_timeout(30)
                         try:
+                            clog.info(f'[THREAD {number} - LINK {link.id}]   browser init DONE')
                             browser.get(link.url)
                             time.sleep(30)
                             div = browser.find_element_by_class_name('article-render')
 
                             try:
+                                clog.info(f'[THREAD {number} - LINK {link.id}]   article block detected')
                                 read_time = browser.find_element_by_xpath('/html/body/div[3]/div[1]/article/div/div[2]/footer/div/div/div[3]/div[2]/span[2]').text
                                 article_info = ttr.determine(read_time, div.size['height'], window_height)
                                 time.sleep(article_info['time_to_scroll'])
                                 for scr_num in range(0, article_info['scrolls']):
                                     browser.execute_script(f"window.scrollBy(0,{article_info['scroll_down']})")
                                     time.sleep(article_info['time_to_scroll'])
+                                clog.info(f'[THREAD {number} - LINK {link.id}]   scroll DONE')
 
                                 like_button = browser.find_element_by_xpath('/html/body/div[3]/div[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/button')
                                 like_button.click()
                                 time.sleep(20)
+                                clog.info(f'[THREAD {number} - LINK {link.id}]   like DONE')
 
                                 clog.info(f'[THREAD {number} - LINK {link.id}]   ALG DETERMINE')
                             except:
@@ -84,6 +88,8 @@ class Algorithm:
                                 for scr_num in range(0, article_info['scrolls']):
                                     browser.execute_script(f"window.scrollBy(0,{article_info['scroll_down']})")
                                     time.sleep(article_info['time_to_scroll'])
+                                clog.info(f'[THREAD {number} - LINK {link.id}]   scroll DONE')
+
                                 clog.info(f'[THREAD {number} - LINK {link.id}]   ALG DETERMINE EXCEPT')
                             
                             total_views += 1
@@ -105,6 +111,7 @@ class Algorithm:
                             clog.warning(f'[THREAD {number} - LINK {link.id}]   {ip}:{port} bad proxy')
                             database.session.delete(history_insert)
                             database.session.commit()
+                            clog.warning(f'[THREAD {number} - LINK {link.id}]   history insert deleted')
                         finally:
                             browser.close()
                             browser.quit()
@@ -231,6 +238,7 @@ class Algorithm:
                     ip_list = []
                     port_dict = {}
                     time.sleep(60)
+                    clog.info(f'[THREAD {number} - LINK {link.id}]   alg awakening...')
                     proxies = gpr.get_list()
                     for prx in proxies:
                         ip_list.append(prx['host'])

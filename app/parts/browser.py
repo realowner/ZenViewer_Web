@@ -31,7 +31,7 @@ class Browser:
         browser = webdriver.Firefox(
             # executable_path="firefoxdriver\geckodriver.exe",
             # executable_path='firefoxdriver/geckodriver',
-            executable_path=f'{basedir}/app/zensel/firefoxdriver/geckodriver',
+            executable_path=f'{basedir}/app/parts/firefoxdriver/geckodriver',
             options=options,
             log_path=f'{basedir}/logs/geckodriver.log',
         )
