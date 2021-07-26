@@ -33,8 +33,11 @@
                 <tr>
                     <td>{{ row.id }}</td>
                     <td style="text-align: left;"><a href="{{ row.url }}">{{ row.url }}</a></td>
-                    <td>{{ row.ip }}</td>
-                    <!-- <td style="border: none;"><a href="#" class="queue-table-delete-btn"><i class="fa fa-trash"></i></a></td> -->
+                    {% if row.is_successful %}
+                        <td style="background: #98FB98;">{{ row.ip }}</td>
+                    {% else %}
+                        <td style="background: #F08080;">{{ row.ip }}</td>
+                    {% endif %}
                 </tr>
             {% endfor %}
         </table>

@@ -15,6 +15,7 @@ class BrowsingHistory(database.Model):
     id = database.Column(database.Integer, primary_key=True)
     url = database.Column(database.Text, nullable=False)
     ip = database.Column(database.String(30), nullable=False)
+    is_successful = database.Column(database.Boolean, nullable=False)
 
     def __repr__(self):
         return f'{self.url} has been viewed with {self.ip}'

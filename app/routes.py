@@ -17,6 +17,7 @@ mlog = main_logger()
 slog = custom_logger('secondary_alg')
 plog = custom_logger('primary_alg')
 blog = custom_logger('behance_alg')
+ylog = custom_logger('youtube_alg')
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -93,12 +94,19 @@ def start(id):
     target_link = LinkQueue.query.get(id)
     views_num_form = NumberOfViewes()
 
+    if target_link.service == 'Zen':
+        clog = plog
+    elif target_link.service == 'Behance':
+        clog = blog
+    elif target_link.service == 'Youtube':
+        clog = ylog
+
     db_viewer = CurrentViewer.query.get(1)
     db_viewer.curr_views = 0
     db_viewer.need_views = views_num_form.num.data
     database.session.commit()
 
-    thread = Thread(target=dt.daemon_func_alg, name='daemonViewer', args=(views_num_form.num.data, id, target_link.service, plog, blog), daemon=True)
+    thread = Thread(target=dt.daemon_func_alg, name='daemonViewer', args=(views_num_form.num.data, id, target_link.service, clog), daemon=True)
     thread.start()
 
     return redirect(url_for('views'))
@@ -153,8 +161,13 @@ def logs():
         beh_log = open(f'{basedir}/logs/viewer/behance_alg_{curr_date}.log', 'r')
     except:
         beh_log = False
+    
+    try:
+        you_log = open(f'{basedir}/logs/viewer/youtube_alg_{curr_date}.log', 'r')
+    except:
+        you_log = False
 
-    return render_template('logs.html', glob_log=glob_log, prim_log=prim_log, secn_log=secn_log, beh_log=beh_log)
+    return render_template('logs.html', glob_log=glob_log, prim_log=prim_log, secn_log=secn_log, beh_log=beh_log, you_log=you_log)
 
 
 @app.route('/settings', methods=['GET', 'POST'])

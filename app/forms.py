@@ -22,7 +22,7 @@ class SettingsForm(FlaskForm):
 class LinkQueueForm(FlaskForm):
     url_for_queue = TextField('Url:', validators=[DataRequired()])
     views = IntegerField('Views:', validators=[DataRequired()])
-    service = SelectField('Service:', validators=[DataRequired()], choices=[('Zen', 'Zen'), ('Behance', 'Behance')])
+    service = SelectField('Service:', validators=[DataRequired()], choices=[('Zen', 'Zen'), ('Behance', 'Behance'), ('Youtube', 'Youtube')])
     submit_link = SubmitField('Add')
 
     def validate_url_for_queue(self, url_for_queue):

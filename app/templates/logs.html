@@ -11,6 +11,7 @@
         <button class="tablinks">Primary</button>
         <button class="tablinks">Secondary</button>
         <button class="tablinks">Behance</button>
+        <button class="tablinks">Youtube</button>
     </div>
 
     <div class="right-bar-content">
@@ -44,6 +45,16 @@
         <div data-id="Behance" class="tabcontent">
             {% if beh_log %}
                 {% for line in beh_log %}
+                    <p class="log-line">{{ line }}</p>
+                {% endfor %}
+            {% else %}
+                <p class="log-line">Behance алгорим сегодня не был запущен.</p>
+            {% endif %}
+        </div>
+
+         <div data-id="Youtube" class="tabcontent">
+            {% if you_log %}
+                {% for line in you_log %}
                     <p class="log-line">{{ line }}</p>
                 {% endfor %}
             {% else %}

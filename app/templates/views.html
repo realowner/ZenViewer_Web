@@ -41,6 +41,8 @@
                         <img src="{{ url_for('static', filename='images/zen.svg') }}" class="views-logo">
                     {% elif link.service == 'Behance' %}
                         <img src="{{ url_for('static', filename='images/behance.svg') }}" class="views-logo">
+                    {% elif link.service == 'Youtube' %}
+                        <img src="{{ url_for('static', filename='images/youtube.svg') }}" class="views-logo">
                     {% else %}
                         <img src="{{ url_for('static', filename='images/question.svg') }}" class="views-logo">
                     {% endif %}

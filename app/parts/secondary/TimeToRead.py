@@ -1,4 +1,5 @@
 import math
+from operator import attrgetter
 import re
 
 
@@ -72,3 +73,16 @@ class TimeToRead:
         }
 
         return result
+
+    def for_youtube(text):
+        before_colon = re.findall(r'(\d+):', text)
+        after_colon = re.findall(r':(\d+)', text)
+        minutes = int(before_colon[0])
+        seconds = int(after_colon[0])
+
+        if minutes != 0:
+            all_time = minutes * 60 + seconds
+        else:
+            all_time = seconds
+
+        return all_time

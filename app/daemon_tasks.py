@@ -9,12 +9,7 @@ from .parts.secondary.ThreadNum import ThreadNum as thn
 
 class DaemonTasks:
 
-    def daemon_func_alg(views_num_form, id, target_service, pr_log, bh_log):
-        if target_service == 'Zen':
-            clog = pr_log
-        elif target_service == 'Behance':
-            clog = bh_log
-
+    def daemon_func_alg(views_num_form, id, target_service, clog):
         links = LinkQueue.query.filter_by(id=id)
         try:
             before_urls_count = len([item.ip for item in BrowsingHistory.query.filter_by(url=links[0].url)])
@@ -32,14 +27,12 @@ class DaemonTasks:
         try:
             thread_list = []
             if proxies == None:
+                start_time = time.time()
                 clog.warning('Failed to get proxy!')
             else:
                 for count in range(thr_num):
 
-                    if target_service == 'Zen':
-                        thread = Thread(target=alg.read_article_withwhile_primary, name=f'THREAD {count+1}', args=(count+1, links, views_num, proxies, clog))
-                    elif target_service == 'Behance':
-                        thread = Thread(target=alg.behance_alg, name=f'THREAD {count+1}', args=(count+1, links, views_num, proxies, clog))
+                    thread = Thread(target=alg.main, name=f'THREAD {count+1}', args=(count+1, links, views_num, proxies, clog, target_service))
 
                     thread_list.append(thread)
                     thread.start()
@@ -64,7 +57,7 @@ class DaemonTasks:
                         database.session.delete(l)
                         database.session.commit()
                 
-                clog.info(f'[INFO] Successfully completed. {difference} of {views_num_form}')
+                clog.info(f'[INFO] Successfully completed. {difference} entries in DB')
             else:
                 clog.error('[INFO] No suitable proxy or bad url, try again!')
 
@@ -96,7 +89,7 @@ class DaemonTasks:
                 clog.warning('Failed to get proxy!')
             else:
                 for count in range(thr_num):
-                    thread = Thread(target=alg.read_article_withwhile_secondary, name=f'THREAD {count+1}', args=(count+1, links[count], proxies, clog))
+                    thread = Thread(target=alg.zen_alg_secondary, name=f'THREAD {count+1}', args=(count+1, links[count], proxies, clog))
                     thread_list.append(thread)
                     thread.start()
                     start_time = time.time()

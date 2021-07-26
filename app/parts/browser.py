@@ -38,5 +38,6 @@ class Browser:
 
         window_size = WindowSize.get_size()
         browser.set_window_size(window_size['width'], window_size['height'])
+        # browser.set_window_size(1280, 720)
 
         return browser
